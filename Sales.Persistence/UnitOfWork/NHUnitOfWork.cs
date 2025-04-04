@@ -1,5 +1,6 @@
 using NHibernate;
 using Sales.Application.Customers;
+using Sales.Application.Employees;
 using Sales.Application.Interfaces;
 using Sales.Persistence.Repositories.NHibernate;
 
@@ -10,6 +11,7 @@ namespace Sales.Persistence.UnitOfWork
     private readonly ISession _session;
     private ITransaction? _transaction;
     private ICustomerRepository? _customerRepository;
+    private IEmployeeRepository? _employeeRepository;
     private bool _disposed;
 
     public NHUnitOfWork(ISession session)
@@ -20,6 +22,7 @@ namespace Sales.Persistence.UnitOfWork
     }
 
     public ICustomerRepository Customers => _customerRepository ??= new NHCustomerRepository(_session);
+    public IEmployeeRepository Employees => _employeeRepository ??= new NHEmployeeRepository(_session);
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

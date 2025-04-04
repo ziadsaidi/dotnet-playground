@@ -20,7 +20,7 @@ namespace Sales.Tests.Application.Customers.Commands
     public async Task ExecuteAsyncShouldReturnValidationErrorsWhenModelIsInvalid()
     {
       // Arrange
-      var model = new CreateCustomerModel(Name: string.Empty);
+      CreateCustomerModel model = new(Name: string.Empty);
 
       _ = MockValidator.Setup(v => v.ValidateAsync(model, default))
           .ReturnsAsync(new FluentValidation.Results.ValidationResult(
@@ -30,7 +30,7 @@ namespace Sales.Tests.Application.Customers.Commands
               }));
 
       // Act
-      var result = await _command.ExecuteAsync(model);
+     var result = await _command.ExecuteAsync(model);
 
       // Assert
       Assert.True(result.IsError);
@@ -45,7 +45,7 @@ namespace Sales.Tests.Application.Customers.Commands
     public async Task ExecuteAsyncShouldReturnDuplicateNameErrorWhenCustomerAlreadyExists()
     {
       // Arrange
-      var model = new CreateCustomerModel("ExistingCustomer");
+      CreateCustomerModel model = new("ExistingCustomer");
 
       _ = MockValidator.Setup(v => v.ValidateAsync(model, It.IsAny<CancellationToken>()))
          .ReturnsAsync(new FluentValidation.Results.ValidationResult());
@@ -53,7 +53,7 @@ namespace Sales.Tests.Application.Customers.Commands
       _ = MockUnitOfWork.Setup(u => u.Customers.ExistsAsync(model.Name, CancellationToken.None)).ReturnsAsync(true);
 
       // Act
-      var result = await _command.ExecuteAsync(model);
+      ErrorOr.ErrorOr<Sales.Application.Customers.Common.Responses.CustomerResponse?> result = await _command.ExecuteAsync(model);
 
       // Assert
       Assert.True(result.IsError);
@@ -69,7 +69,7 @@ namespace Sales.Tests.Application.Customers.Commands
     public async Task ExecuteAsyncShouldCreateCustomerWhenValidModel()
     {
       // Arrange
-      var model = new CreateCustomerModel(Name: "NewCustomer");
+      CreateCustomerModel model = new(Name: "NewCustomer");
       _ = MockValidator.Setup(v => v.ValidateAsync(model, It.IsAny<CancellationToken>()))
           .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
@@ -79,7 +79,7 @@ namespace Sales.Tests.Application.Customers.Commands
                 .ReturnsAsync(1);
 
       // Act
-      var result = await _command.ExecuteAsync(model);
+      ErrorOr.ErrorOr<Sales.Application.Customers.Common.Responses.CustomerResponse?> result = await _command.ExecuteAsync(model);
 
       // Assert
       Assert.False(result.IsError);

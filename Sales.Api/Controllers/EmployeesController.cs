@@ -1,22 +1,22 @@
 
 using Microsoft.AspNetCore.Mvc;
 using ErrorOr;
-using Sales.Application.Customers.Queries.GetAllCustomers;
-using Sales.Application.Customers.Commands.CreateCustomer;
-using Sales.Application.Customers.Queries.GetCustomerById;
+using Sales.Application.Employees.Commnads.CreateEmployee;
+using Sales.Application.Employees.Queries.GetAllEmpoyees;
+using Sales.Application.Employees.Queries.GetEmployeeById;
 
 namespace Sales.Api.Controllers
 {
   [ApiController]
   [Route("api/[controller]")]
   [Produces("application/problem+json")]
-  public sealed class CustomersController(ICreateCustomerCommand createCustomerCommand,
-                             IGetAllCustomerQuery getAllCustomerQuery,
-                             IGetCustomerByIdQuery getCustomerByIdQuery) : ControllerBase
+  public sealed class EmployeesController(ICreateEmployeeCommand createCustomerCommand,
+                             IGetAllEmployeesQuery getAllEmployeesQuery,
+                             IGetEmployeeById getEmployeeById) : ControllerBase
   {
-    private readonly ICreateCustomerCommand _createCustomerCommand = createCustomerCommand;
-    private readonly IGetAllCustomerQuery _getAllCustomerQuery = getAllCustomerQuery;
-    private readonly IGetCustomerByIdQuery _getCustomerByIdQuery = getCustomerByIdQuery;
+    private readonly ICreateEmployeeCommand _createCustomerCommand = createCustomerCommand;
+    private readonly IGetAllEmployeesQuery _getAllEmployeesQuery = getAllEmployeesQuery;
+    private readonly IGetEmployeeById _getEmployeeById = getEmployeeById;
 
     /// <summary>
     /// Creates a new customer
@@ -26,7 +26,7 @@ namespace Sales.Api.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Create([FromBody] CreateCustomerModel model)
+    public async Task<IActionResult> Create([FromBody] CreateEmployeeModel model)
     {
       var result = await _createCustomerCommand.ExecuteAsync(model, CancellationToken.None);
 
@@ -58,7 +58,7 @@ namespace Sales.Api.Controllers
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll()
     {
-      var result = await _getAllCustomerQuery.ExecuteAsync(CancellationToken.None);
+      var result = await _getAllEmployeesQuery.ExecuteAsync(CancellationToken.None);
 
       return result.Match(
           Ok,
@@ -85,7 +85,9 @@ namespace Sales.Api.Controllers
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetById(Guid id)
     {
-      return (await _getCustomerByIdQuery.ExecuteAsync(id, CancellationToken.None)).Match(
+      var result = await _getEmployeeById.ExecuteAsync(id, CancellationToken.None);
+
+      return result.Match(
           Ok,
           errors => errors?.First().Type switch
           {

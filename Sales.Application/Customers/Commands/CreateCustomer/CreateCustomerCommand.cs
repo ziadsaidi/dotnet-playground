@@ -17,7 +17,7 @@ public sealed class CreateCustomerCommand(
   public async Task<ErrorOr<CustomerResponse?>> ExecuteAsync(CreateCustomerModel model, CancellationToken cancellationToken = default)
   {
     // Validate using FluentValidation
-    var validationResult = await _validator.ValidateAsync(model, cancellationToken);
+    FluentValidation.Results.ValidationResult validationResult = await _validator.ValidateAsync(model, cancellationToken);
 
     if (!validationResult.IsValid)
     {
@@ -32,7 +32,7 @@ public sealed class CreateCustomerCommand(
     }
 
     // Create and persist the customer
-    var customer = new Customer { Name = model.Name };
+    Customer customer = new() { Name = model.Name };
 
     await _unitOfWork.Customers.AddAsync(customer, cancellationToken);
     _ = await _unitOfWork.SaveChangesAsync(cancellationToken);

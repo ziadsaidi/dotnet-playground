@@ -1,5 +1,4 @@
 
-namespace Sales.Application.Customers.Commands.CreateCustomer
-{
-  public record CreateCustomerModel(string Name);
-}
+namespace Sales.Application.Customers.Commands.CreateCustomer;
+
+public record CreateCustomerModel(string Name);

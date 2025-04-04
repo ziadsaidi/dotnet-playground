@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NHibernate;
 using Sales.Application.Customers;
+using Sales.Application.Employees;
 using Sales.Application.Interfaces;
 using Sales.Persistence.Data.Contexts;
 using Sales.Persistence.Repositories.EntityFramework;
@@ -29,7 +30,6 @@ public static class DependencyInjectionExtension
   {
     // Register common services
 
-
     // Register the database provider based on the selection
     return provider switch
     {
@@ -43,7 +43,7 @@ public static class DependencyInjectionExtension
       this IServiceCollection services,
       IConfiguration configuration)
   {
-    var connectionString = configuration.GetConnectionString("PostgreSqlConnection")
+    string connectionString = configuration.GetConnectionString("PostgreSqlConnection")
         ?? throw new InvalidOperationException("EF Database connection string is not configured.");
 
     // Configure Entity Framework
@@ -53,6 +53,7 @@ public static class DependencyInjectionExtension
 
     // Register EF repositories
     _ = services.AddScoped<ICustomerRepository, CustomerRepository>();
+    _ = services.AddScoped<IEmployeeRepository, EmployeeRepository>();
     _ = services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 
     return services;
@@ -62,7 +63,7 @@ public static class DependencyInjectionExtension
       this IServiceCollection services,
       IConfiguration configuration)
   {
-    var connectionString = configuration.GetConnectionString("NHibernateConnection")
+    string connectionString = configuration.GetConnectionString("NHibernateConnection")
         ?? throw new InvalidOperationException("NHibernate Database connection string is not configured.");
 
     // Configure FluentMigrator for running migrations
@@ -76,8 +77,8 @@ public static class DependencyInjectionExtension
     // Configure NHibernate
     _ = services.AddSingleton(provider =>
     {
-      var sessionFactory = NHibernateHelper.CreateSessionFactory(connectionString);
-      var lifetime = provider.GetRequiredService<IHostApplicationLifetime>();
+      ISessionFactory sessionFactory = NHibernateHelper.CreateSessionFactory(connectionString);
+      IHostApplicationLifetime lifetime = provider.GetRequiredService<IHostApplicationLifetime>();
 
       // Dispose sessionFactory properly when the application stops
       _ = lifetime.ApplicationStopping.Register(() => sessionFactory.Dispose());
@@ -87,6 +88,7 @@ public static class DependencyInjectionExtension
 
     _ = services.AddScoped(factory => factory.GetRequiredService<ISessionFactory>().OpenSession());
     _ = services.AddScoped<ICustomerRepository, NHCustomerRepository>();
+    _ = services.AddScoped<IEmployeeRepository, NHEmployeeRepository>();
     _ = services.AddScoped<IUnitOfWork, NHUnitOfWork>();
 
     return services;

@@ -3,6 +3,7 @@ using FluentValidation;
 using Moq;
 using Sales.Application.Customers;
 using Sales.Application.Customers.Commands.CreateCustomer;
+using Sales.Application.Employees;
 using Sales.Application.Interfaces;
 using Sales.Domain.Entities;
 
@@ -12,6 +13,7 @@ namespace Sales.Tests.Common
   {
     protected readonly Mock<IUnitOfWork> MockUnitOfWork;
     protected readonly Mock<ICustomerRepository> MockCustomerRepository;
+    protected readonly Mock<IEmployeeRepository> MockEmployeeRepository;
     protected readonly Mock<IValidator<CreateCustomerModel>> MockValidator;
 
     protected TestBase()
@@ -19,10 +21,12 @@ namespace Sales.Tests.Common
       // Initialize mocks
       MockUnitOfWork = new Mock<IUnitOfWork>();
       MockCustomerRepository = new Mock<ICustomerRepository>();
+      MockEmployeeRepository = new Mock<IEmployeeRepository>();
       MockValidator = new Mock<IValidator<CreateCustomerModel>>();
 
       // Set up default mock behavior
       _ = MockUnitOfWork.Setup(u => u.Customers).Returns(MockCustomerRepository.Object);
+      _ = MockUnitOfWork.Setup(u => u.Employees).Returns(MockEmployeeRepository.Object);
     }
 
     /// <summary>

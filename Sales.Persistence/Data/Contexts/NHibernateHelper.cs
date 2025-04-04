@@ -15,7 +15,7 @@ namespace Sales.Persistence.Data.Contexts
     public static ISessionFactory CreateSessionFactory(string connectionString)
     {
       // Configure NHibernate with Fluent NHibernate
-      var configuration = Fluently.Configure()
+      NHibernate.Cfg.Configuration configuration = Fluently.Configure()
           .Database(PostgreSQLConfiguration.Standard
               .ConnectionString(connectionString)
               .Driver<NpgsqlDriver>()

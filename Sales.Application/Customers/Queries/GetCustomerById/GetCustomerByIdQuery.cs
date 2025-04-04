@@ -2,6 +2,7 @@ using ErrorOr;
 using Sales.Application.Customers.Common.Responses;
 using Sales.Application.Interfaces;
 using Sales.Domain.Common;
+using Sales.Domain.Entities;
 
 namespace Sales.Application.Customers.Queries.GetCustomerById;
 
@@ -11,7 +12,7 @@ public class GetCustomerByIdQuery(IUnitOfWork unitOfWork) : IGetCustomerByIdQuer
 
   public async Task<ErrorOr<CustomerResponse?>> ExecuteAsync(Guid id, CancellationToken cancellationToken)
   {
-    var customer = await _unitOfWork.Customers.GetByIdAsync(id, cancellationToken);
+    Customer? customer = await _unitOfWork.Customers.GetByIdAsync(id, cancellationToken);
 
     return customer is null
         ? Errors.CustomerErrors.NotFound

@@ -12,7 +12,7 @@ public class GetAllCustomersQuery(IUnitOfWork unitOfWork) : IGetAllCustomerQuery
   private readonly IUnitOfWork _unitOfWork = unitOfWork;
   public async Task<ErrorOr<List<CustomerResponse>>> ExecuteAsync(CancellationToken cancellationToken)
   {
-    var customers = await _unitOfWork.Customers.GetCustomers().ToListAsync(cancellationToken);
+    List<Domain.Entities.Customer> customers = await _unitOfWork.Customers.GetCustomers().ToListAsync(cancellationToken);
 
     if (customers.Count == 0)
       return Errors.CustomerErrors.NotFound;
