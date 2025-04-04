@@ -1,0 +1,19 @@
+@Api_HostAddress = http://localhost:5231
+
+### Test: Create a new customer (POST request)
+POST {{Api_HostAddress}}/api/customers
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Name": "Janer"
+}
+
+### Test: Get all customers (GET request)
+GET {{Api_HostAddress}}/api/customers
+Accept: application/json
+
+### Test: Get a customer by ID (GET request)
+GET {{Api_HostAddress}}/api/customers/{id}
+Accept: application/json
+
