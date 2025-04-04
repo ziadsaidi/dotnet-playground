@@ -3,9 +3,7 @@ using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using NHibernate.Dialect;
 using NHibernate.Driver;
-using Microsoft.Extensions.DependencyInjection;
 using Sales.Persistence.Configurations.NHibernate;
-using FluentMigrator.Runner;
 using FluentNHibernate.Conventions;
 using FluentNHibernate.Conventions.Instances;
 using Humanizer;
@@ -14,7 +12,7 @@ namespace Sales.Persistence.Data.Contexts
 {
   public static class NHibernateHelper
   {
-    public static ISessionFactory CreateSessionFactory(string connectionString, IServiceProvider serviceProvider)
+    public static ISessionFactory CreateSessionFactory(string connectionString)
     {
       // Configure NHibernate with Fluent NHibernate
       var configuration = Fluently.Configure()
@@ -42,21 +40,9 @@ namespace Sales.Persistence.Data.Contexts
           .BuildConfiguration();
 
       // Build the session factory
-      var sessionFactory = configuration.BuildSessionFactory();
-
-      // Apply FluentMigrator migrations when the application starts
-      ApplyMigrations(serviceProvider);
-
-      return sessionFactory;
+      return configuration.BuildSessionFactory();
     }
 
-    private static void ApplyMigrations(IServiceProvider serviceProvider)
-    {
-      // Apply migrations using FluentMigrator
-      using var scope = serviceProvider.CreateScope();
-      var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
-      runner.MigrateUp();
-    }
     public class SnakeCaseConvention : IPropertyConvention, IClassConvention
     {
       public void Apply(IPropertyInstance instance)
@@ -73,4 +59,3 @@ namespace Sales.Persistence.Data.Contexts
     }
   }
 }
-

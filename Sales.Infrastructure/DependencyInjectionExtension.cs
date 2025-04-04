@@ -7,9 +7,7 @@ using Microsoft.Extensions.Logging;
 using NHibernate;
 using Sales.Application.Customers;
 using Sales.Application.Interfaces;
-using Sales.Persistence;
 using Sales.Persistence.Data.Contexts;
-using Sales.Persistence.Repositories;
 using Sales.Persistence.Repositories.EntityFramework;
 using Sales.Persistence.Repositories.NHibernate;
 using Sales.Persistence.UnitOfWork;
@@ -78,7 +76,7 @@ public static class DependencyInjectionExtension
     // Configure NHibernate
     _ = services.AddSingleton(provider =>
     {
-      var sessionFactory = NHibernateHelper.CreateSessionFactory(connectionString, provider);
+      var sessionFactory = NHibernateHelper.CreateSessionFactory(connectionString);
       var lifetime = provider.GetRequiredService<IHostApplicationLifetime>();
 
       // Dispose sessionFactory properly when the application stops
