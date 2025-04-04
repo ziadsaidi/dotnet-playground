@@ -1,10 +1,10 @@
 <Project>
 
 	<PropertyGroup>
-		<Copyright>Copyright @ 2025 C2S Bouygues</Copyright>
-		<Authors>C2S Bouygues</Authors>
-		<Company>C2S Bouygues</Company>
-		<Product>Rejeneo</Product>
+		<Copyright>Copyright @ 2025  Evanos</Copyright>
+		<Authors>CEvanos</Authors>
+		<Company>Evanos</Company>
+		<Product>Clean Code</Product>
 
 		<Version>1.0.0.0</Version>
 		<FileVersion>1.0.0.0</FileVersion>
@@ -21,9 +21,6 @@
 		<RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
 		<TreatWarningsAsErrors Condition="'$(CI)' == 'true' Or '$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
 		<NoWarn>$(NoWarn);CA1031;CA1062;CA1303;CA1308;CA1812;CA1819;CA1848;CA2007;CA5394</NoWarn>
-
-		<!-- Enable package caching in GitHub workflow, causes issues with Aspire -->
-		<!--<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>-->
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(MSBuildProjectExtension)' != '.dcproj'">
