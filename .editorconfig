@@ -8,3 +8,6 @@ dotnet_diagnostic.IDE0052.severity = suggestion
 
 # CA1034: Les types imbriqués ne doivent pas être visibles
 dotnet_diagnostic.CA1034.severity = silent
+
+# CA1515: Envisager de rendre les types publics internes
+dotnet_diagnostic.CA1515.severity = silent

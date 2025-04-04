@@ -1,4 +1,3 @@
-# docker-compose.yml
 version: '3.4'
 
 services:
@@ -6,25 +5,42 @@ services:
     image: api
     build:
       context: .
-      dockerfile: Api/Dockerfile
+      dockerfile: Sales.Api/Dockerfile
     ports:
       - "5001:5001"
     environment:
-      - ConnectionStrings__DefaultConnection=Host=localhost;Port=5432;Database=sales;Username=postgres;Password=postgres
+      # For EF connection
+      - ConnectionStrings__DefaultConnection=Host=db-ef;Port=5432;Database=salesEf;Username=postgres;Password=postgres
+      # For NHibernate connection
+      - ConnectionStrings__NHConnection=Host=db-nh;Port=5432;Database=salesNh;Username=postgres;Password=postgres
     depends_on:
-      - db
+      - db-ef
+      - db-nh
 
-  db:
+  db-ef:
     image: postgres:16
     restart: always
     environment:
-      POSTGRES_DB: sales
+      POSTGRES_DB: salesEf
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"  # Exposing different port to avoid conflict
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_ef:/var/lib/postgresql/data
+
+  db-nh:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: salesNh
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"  # Exposing different port to avoid conflict
+    volumes:
+      - postgres_data_nh:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
+  postgres_data_ef:
+  postgres_data_nh:
