@@ -11,3 +11,15 @@ dotnet_diagnostic.CA1034.severity = silent
 
 # CA1515: Envisager de rendre les types publics internes
 dotnet_diagnostic.CA1515.severity = silent
+
+# CA1862: Utiliser les surcharges de méthode « StringComparison » pour effectuer des comparaisons de chaînes sans respect de la casse
+dotnet_diagnostic.CA1862.severity = silent
+
+# CA1040: Éviter les interfaces vides
+dotnet_diagnostic.CA1040.severity = silent
+
+# CS8600: Conversion de littéral ayant une valeur null ou d'une éventuelle valeur null en type non-nullable.
+dotnet_diagnostic.CS8600.severity = silent
+
+# CS8602: Déréférencement d'une éventuelle référence null.
+dotnet_diagnostic.CS8602.severity = silent

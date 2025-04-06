@@ -3,16 +3,17 @@ using ErrorOr;
 using FluentValidation;
 using Sales.Application.Employees.Common.Responses;
 using Sales.Application.Interfaces;
+using Sales.Application.Mediator;
 using Sales.Domain.Common;
 using Sales.Domain.Entities;
 
-namespace Sales.Application.Employees.Commnads.CreateEmployee;
+namespace Sales.Application.Employees.Commnads.Create;
 
-public class CreateEmployeCommand(IUnitOfWork unitOfWork, IValidator<CreateEmployeeModel> validator) : ICreateEmployeeCommand
+public sealed class CreateEmployeeCommandHandler(IUnitOfWork unitOfWork, IValidator<CreateEmployeeCommand> validator) : IRequestHandler<CreateEmployeeCommand, EmployeeResponse?>
 {
   private readonly IUnitOfWork _unitOfWork = unitOfWork;
-  private readonly IValidator<CreateEmployeeModel> _validator = validator;
-  public async Task<ErrorOr<EmployeeResponse?>> ExecuteAsync(CreateEmployeeModel model, CancellationToken cancellationToken)
+  private readonly IValidator<CreateEmployeeCommand> _validator = validator;
+  public async Task<ErrorOr<EmployeeResponse?>> HandleAsync(CreateEmployeeCommand model, CancellationToken cancellationToken)
   {
     // Validate using FluentValidation
     FluentValidation.Results.ValidationResult validationResult = await _validator.ValidateAsync(model, cancellationToken);

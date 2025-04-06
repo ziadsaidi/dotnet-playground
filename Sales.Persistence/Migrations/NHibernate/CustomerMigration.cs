@@ -1,10 +1,10 @@
 using FluentMigrator;
 using Sales.Persistence.Constants;
 
-namespace Sales.Persistence.NHibernateMigrations;
+namespace Sales.Persistence.Migrations.NHibernate;
 
-[Migration(20240404)]
-public class InitialNHibernateMigration : Migration
+[Migration(202404052)]
+public class CustomerMigration : Migration
 {
   public override void Up()
   {

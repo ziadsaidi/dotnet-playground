@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Sales.Domain.Entities;
 
-namespace Sales.Persistence.Data.Contexts;
+namespace Sales.Persistence.Data.Configuration;
 
 public class AppDbContext : DbContext
 {

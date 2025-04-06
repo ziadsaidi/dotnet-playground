@@ -2,7 +2,7 @@
 using Sales.Application.Customers;
 using Sales.Application.Employees;
 using Sales.Application.Interfaces;
-using Sales.Persistence.Data.Contexts;
+using Sales.Persistence.Data.Configuration;
 using Sales.Persistence.Repositories.EntityFramework;
 
 namespace Sales.Persistence.UnitOfWork

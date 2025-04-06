@@ -2,10 +2,10 @@
 using FluentMigrator;
 using Sales.Persistence.Constants;
 
-namespace Sales.Persistence.NHibernateMigrations;
+namespace Sales.Persistence.Migrations.NHibernate;
 
 
-[Migration(20240406)]
+[Migration(202404053)]
 public class ProductMigration : Migration
 {
   public override void Up()

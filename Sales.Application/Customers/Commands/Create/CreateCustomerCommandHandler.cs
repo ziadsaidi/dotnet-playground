@@ -4,20 +4,21 @@ using Sales.Application.Customers.Common.Responses;
 using Sales.Domain.Entities;
 using Sales.Domain.Common;
 using Sales.Application.Interfaces;
+using Sales.Application.Mediator;
 
-namespace Sales.Application.Customers.Commands.CreateCustomer;
+namespace Sales.Application.Customers.Commands.Create;
 
-public sealed class CreateCustomerCommand(
+public sealed class CreateCustomerCommandHandler(
     IUnitOfWork unitOfWork,
-    IValidator<CreateCustomerModel> validator) : ICreateCustomerCommand
+    IValidator<CreateCustomerCommand> validator) : IRequestHandler<CreateCustomerCommand, CustomerResponse?>
 {
   private readonly IUnitOfWork _unitOfWork = unitOfWork;
-  private readonly IValidator<CreateCustomerModel> _validator = validator;
+  private readonly IValidator<CreateCustomerCommand> _validator = validator;
 
-  public async Task<ErrorOr<CustomerResponse?>> ExecuteAsync(CreateCustomerModel model, CancellationToken cancellationToken = default)
+  public async Task<ErrorOr<CustomerResponse?>> HandleAsync(CreateCustomerCommand model, CancellationToken cancellationToken = default)
   {
     // Validate using FluentValidation
-    FluentValidation.Results.ValidationResult validationResult = await _validator.ValidateAsync(model, cancellationToken);
+    var validationResult = await _validator.ValidateAsync(model, cancellationToken);
 
     if (!validationResult.IsValid)
     {

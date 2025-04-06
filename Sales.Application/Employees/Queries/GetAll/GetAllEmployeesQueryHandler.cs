@@ -1,15 +1,15 @@
 using ErrorOr;
 using Sales.Application.Employees.Common.Responses;
 using Sales.Application.Interfaces;
+using Sales.Application.Mediator;
 using Sales.Domain.Common;
 
-namespace Sales.Application.Employees.Queries.GetAllEmpoyees
+namespace Sales.Application.Employees.Queries.GetAll
 {
-  public class GetAllEmployeesQuery(IUnitOfWork unitOfWork) : IGetAllEmployeesQuery
+  public sealed class GetAllEmployeesQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetAllEmployeesQuery, List<EmployeeResponse>>
   {
-
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    public async Task<ErrorOr<List<EmployeeResponse>>> ExecuteAsync(CancellationToken cancellationToken)
+    public async Task<ErrorOr<List<EmployeeResponse>>> HandleAsync(GetAllEmployeesQuery request, CancellationToken cancellationToken)
     {
       List<Domain.Entities.Employee> employees = await _unitOfWork.Employees.GetEmployees().ToListAsync(cancellationToken);
 

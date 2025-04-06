@@ -5,7 +5,7 @@ namespace Sales.Persistence.Configurations.EntityFramework
   using Sales.Domain.Entities;
   using Sales.Persistence.Constants;
 
-  public class SaleConfiguration : IEntityTypeConfiguration<Sale>
+  public sealed class SaleConfiguration : IEntityTypeConfiguration<Sale>
   {
     public void Configure(EntityTypeBuilder<Sale> builder)
     {

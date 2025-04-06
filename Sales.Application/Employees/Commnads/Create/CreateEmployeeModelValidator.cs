@@ -1,10 +1,10 @@
 using FluentValidation;
 
-namespace Sales.Application.Customers.Commands.CreateCustomer;
+namespace Sales.Application.Employees.Commnads.Create;
 
-public class CreateCustomerModelValidator : AbstractValidator<CreateCustomerModel>
+public sealed class CreateEmployeeModelValidator : AbstractValidator<CreateEmployeeCommand>
 {
-  public CreateCustomerModelValidator()
+  public CreateEmployeeModelValidator()
   {
     _ = RuleFor(x => x.Name)
         .NotEmpty().WithMessage("Name is required")

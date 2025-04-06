@@ -1,0 +1,42 @@
+# 🎯 Dotnet Playground
+
+This project is a sandbox for learning and experimenting with **.NET Core** and a bunch of cool libraries and patterns.
+
+---
+
+## 🧪 Purpose
+
+> Just playing around. No pressure, no production — only learning.
+
+This project helps explore and understand:
+
+- 🧱 ASP.NET Core fundamentals
+- 🧩 Custom Mediator pattern (like MediatR)
+- 🧮 Data access with **Dapper** and **NHibernate**
+- 🗃️ Database migrations with **DbUp**
+- 🧠 Architectural styles like Clean Architecture, CQRS, DDD
+
+---
+
+## 🛠️ Tech Stack & Libraries
+
+| Area              | Tool / Library      |
+|-------------------|---------------------|
+| Web Framework     | ASP.NET Core        |
+| ORM               | NHibernate          |
+| Micro ORM         | Dapper              |
+| DB Migrations     | DbUp                |
+| Mediator Pattern  | Custom Implementation |
+| Error Handling    | ErrorOr             |
+| DI & Configuration| Microsoft.Extensions |
+| Extras            | FluentValidation
+
+---
+
+## 🚀 Getting Started
+
+1. **Clone the repo**
+
+   ```bash
+   git clone https://github.com/yourusername/dotnet-playground.git
+   cd dotnet-playground

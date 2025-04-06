@@ -1,4 +1,3 @@
-version: '3.4'
 
 services:
   api:
@@ -16,6 +15,7 @@ services:
     depends_on:
       - db-ef
       - db-nh
+      - db-dapper
 
   db-ef:
     image: postgres:16
@@ -41,6 +41,19 @@ services:
     volumes:
       - postgres_data_nh:/var/lib/postgresql/data
 
+  db-dapper:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: salesDapper
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"  # Exposing different port to avoid conflict
+    volumes:
+      - postgres_data_dapper:/var/lib/postgresql/data
+
 volumes:
   postgres_data_ef:
   postgres_data_nh:
+  postgres_data_dapper:

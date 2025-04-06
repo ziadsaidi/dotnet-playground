@@ -1,26 +1,26 @@
 
 using Moq;
-using Sales.Application.Customers.Commands.CreateCustomer;
 using Sales.Domain.Entities;
 using Sales.Tests.Common;
 using Sales.Domain.Common;
+using Sales.Application.Customers.Commands.Create;
 
 namespace Sales.Tests.Application.Customers.Commands
 {
   public class CreateCustomerCommandTests : TestBase
   {
-    private readonly CreateCustomerCommand _command;
+    private readonly CreateCustomerCommandHandler _command;
 
     public CreateCustomerCommandTests()
     {
-      _command = new CreateCustomerCommand(MockUnitOfWork.Object, MockValidator.Object);
+      _command = new CreateCustomerCommandHandler(MockUnitOfWork.Object, MockValidator.Object);
     }
 
     [Fact]
     public async Task ExecuteAsyncShouldReturnValidationErrorsWhenModelIsInvalid()
     {
       // Arrange
-      CreateCustomerModel model = new(Name: string.Empty);
+      CreateCustomerCommand model = new(Name: string.Empty);
 
       _ = MockValidator.Setup(v => v.ValidateAsync(model, default))
           .ReturnsAsync(new FluentValidation.Results.ValidationResult(
@@ -30,7 +30,7 @@ namespace Sales.Tests.Application.Customers.Commands
               }));
 
       // Act
-     var result = await _command.ExecuteAsync(model);
+      var result = await _command.HandleAsync(model);
 
       // Assert
       Assert.True(result.IsError);
@@ -45,7 +45,7 @@ namespace Sales.Tests.Application.Customers.Commands
     public async Task ExecuteAsyncShouldReturnDuplicateNameErrorWhenCustomerAlreadyExists()
     {
       // Arrange
-      CreateCustomerModel model = new("ExistingCustomer");
+      CreateCustomerCommand model = new("ExistingCustomer");
 
       _ = MockValidator.Setup(v => v.ValidateAsync(model, It.IsAny<CancellationToken>()))
          .ReturnsAsync(new FluentValidation.Results.ValidationResult());
@@ -53,7 +53,7 @@ namespace Sales.Tests.Application.Customers.Commands
       _ = MockUnitOfWork.Setup(u => u.Customers.ExistsAsync(model.Name, CancellationToken.None)).ReturnsAsync(true);
 
       // Act
-      ErrorOr.ErrorOr<Sales.Application.Customers.Common.Responses.CustomerResponse?> result = await _command.ExecuteAsync(model);
+       var result = await _command.HandleAsync(model);
 
       // Assert
       Assert.True(result.IsError);
@@ -69,7 +69,7 @@ namespace Sales.Tests.Application.Customers.Commands
     public async Task ExecuteAsyncShouldCreateCustomerWhenValidModel()
     {
       // Arrange
-      CreateCustomerModel model = new(Name: "NewCustomer");
+      CreateCustomerCommand model = new(Name: "NewCustomer");
       _ = MockValidator.Setup(v => v.ValidateAsync(model, It.IsAny<CancellationToken>()))
           .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
@@ -79,7 +79,7 @@ namespace Sales.Tests.Application.Customers.Commands
                 .ReturnsAsync(1);
 
       // Act
-      ErrorOr.ErrorOr<Sales.Application.Customers.Common.Responses.CustomerResponse?> result = await _command.ExecuteAsync(model);
+      var result = await _command.HandleAsync(model);
 
       // Assert
       Assert.False(result.IsError);

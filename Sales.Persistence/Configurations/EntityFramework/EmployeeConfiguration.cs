@@ -4,7 +4,7 @@ using Sales.Persistence.Constants;
 
 namespace Sales.Persistence.Configurations.EntityFramework
 {
-  public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
+  public sealed class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
   {
     public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Employee> builder)
     {

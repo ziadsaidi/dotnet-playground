@@ -5,7 +5,7 @@ using Sales.Persistence.Constants;
 
 namespace Sales.Persistence.Configurations.EntityFramework
 {
-  public class ProductConfiguration : IEntityTypeConfiguration<Product>
+  public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
   {
     public void Configure(EntityTypeBuilder<Product> builder)
     {

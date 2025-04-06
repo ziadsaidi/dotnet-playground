@@ -2,15 +2,17 @@ using System.Diagnostics;
 using FluentMigrator.Runner;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Sales.Application.Customers.Commands.CreateCustomer;
-using Sales.Application.Customers.Queries.GetAllCustomers;
-using Sales.Application.Customers.Queries.GetCustomerById;
-using Sales.Application.Employees.Commnads;
-using Sales.Application.Employees.Commnads.CreateEmployee;
-using Sales.Application.Employees.Queries.GetAllEmpoyees;
-using Sales.Application.Employees.Queries.GetEmployeeById;
+using Sales.Application.Customers.Commands.Create;
+using Sales.Application.Customers.Common.Responses;
+using Sales.Application.Customers.Queries.GetAll;
+using Sales.Application.Customers.Queries.GetById;
+using Sales.Application.Employees.Commnads.Create;
+using Sales.Application.Employees.Common.Responses;
+using Sales.Application.Employees.Queries.GetAll;
+using Sales.Application.Employees.Queries.GetById;
+using Sales.Application.Mediator;
 using Sales.Infrastructure;
-using Sales.Persistence.Data.Contexts;
+using Sales.Persistence.Data.Configuration;
 using Scalar.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -45,14 +47,16 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy
     .AllowCredentials()
     .WithOrigins(builder.Configuration["AllowedOrigins"]?.Split(',') ?? Array.Empty<string>())));
 
-// Register commands and queries
-builder.Services.AddScoped<ICreateCustomerCommand, CreateCustomerCommand>();
-builder.Services.AddScoped<IGetAllCustomerQuery, GetAllCustomersQuery>();
-builder.Services.AddScoped<IGetCustomerByIdQuery, GetCustomerByIdQuery>();
-builder.Services.AddScoped<ICreateEmployeeCommand, CreateEmployeCommand>();
-builder.Services.AddScoped<IGetAllEmployeesQuery, GetAllEmployeesQuery>();
-builder.Services.AddScoped<IGetEmployeeById, GetEmployeeById>();
+// Register the Mediator
+builder.Services.AddScoped<IAppMediator, AppMediator>();
 
+// Register all handlers (queries and commands)
+builder.Services.AddScoped<IRequestHandler<CreateCustomerCommand, CustomerResponse?>, CreateCustomerCommandHandler>();
+builder.Services.AddScoped<IRequestHandler<GetAllCustomersQuery, List<CustomerResponse>>, GetAllCustomersQueryHandler>();
+builder.Services.AddScoped<IRequestHandler<GetCustomerByIdQuery, CustomerResponse?>, GetCustomerByIdQueryHandler>();
+builder.Services.AddScoped<IRequestHandler<CreateEmployeeCommand, EmployeeResponse?>, CreateEmployeeCommandHandler>();
+builder.Services.AddScoped<IRequestHandler<GetAllEmployeesQuery, List<EmployeeResponse>>, GetAllEmployeesQueryHandler>();
+builder.Services.AddScoped<IRequestHandler<GetEmployeeBydQuery, EmployeeResponse?>, GetEmployeeByIdQueryHandler>();
 
 builder.Services.AddValidatorsFromAssembly(typeof(CreateCustomerModelValidator).Assembly);
 
@@ -73,16 +77,20 @@ app.MapScalarApiReference(options => options.WithTitle("API"));
 // Migrate Database based on selected provider
 await using AsyncServiceScope scope = app.Services.CreateAsyncScope();
 
-if (databaseProvider == DatabaseProvider.EntityFramework)
+if (databaseProvider is DatabaseProvider.EntityFramework)
 {
   AppDbContext context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
   await context.Database.MigrateAsync();
 }
-else if (databaseProvider == DatabaseProvider.NHibernate)
+else if (databaseProvider is DatabaseProvider.NHibernate)
 {
   IMigrationRunner migrationRunner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
   migrationRunner.MigrateUp();
 }
-
+else if (databaseProvider is DatabaseProvider.Dapper)
+{
+  var connectionstring = builder.Configuration.GetConnectionString("DapperConnection");
+  DatabaseInitializer.Initialize(connectionstring!);
+}
 // Run application
 await app.RunAsync();

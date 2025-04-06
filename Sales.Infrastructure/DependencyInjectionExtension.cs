@@ -1,3 +1,4 @@
+using System.Data;
 using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -5,10 +6,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NHibernate;
+using Npgsql;
 using Sales.Application.Customers;
 using Sales.Application.Employees;
 using Sales.Application.Interfaces;
-using Sales.Persistence.Data.Contexts;
+using Sales.Persistence.Data.Configuration;
+using Sales.Persistence.Repositories.Dapper;
 using Sales.Persistence.Repositories.EntityFramework;
 using Sales.Persistence.Repositories.NHibernate;
 using Sales.Persistence.UnitOfWork;
@@ -18,7 +21,8 @@ namespace Sales.Infrastructure;
 public enum DatabaseProvider
 {
   EntityFramework,
-  NHibernate
+  NHibernate,
+  Dapper
 }
 
 public static class DependencyInjectionExtension
@@ -35,6 +39,7 @@ public static class DependencyInjectionExtension
     {
       DatabaseProvider.EntityFramework => services.AddEntityFramework(configuration),
       DatabaseProvider.NHibernate => services.AddNHibernate(configuration),
+      DatabaseProvider.Dapper => services.AddDapper(configuration),
       _ => throw new ArgumentOutOfRangeException(nameof(provider), "Unsupported database provider")
     };
   }
@@ -60,24 +65,22 @@ public static class DependencyInjectionExtension
   }
 
   private static IServiceCollection AddNHibernate(
-      this IServiceCollection services,
-      IConfiguration configuration)
+    this IServiceCollection services,
+     IConfiguration configuration)
   {
-    string connectionString = configuration.GetConnectionString("NHibernateConnection")
-        ?? throw new InvalidOperationException("NHibernate Database connection string is not configured.");
-
-    // Configure FluentMigrator for running migrations
+    // Register the common database connection for Dapper and NHibernate
     _ = services.AddFluentMigratorCore()
-            .ConfigureRunner(runner => runner
-                .AddPostgres()
-                .WithGlobalConnectionString(connectionString)
-                .ScanIn(typeof(Persistence.NHibernateMigrations.InitialNHibernateMigration).Assembly).For.Migrations())
-            .AddLogging(config => config.AddConsole());
-
+        .ConfigureRunner(runner => runner
+            .AddPostgres()
+            .WithGlobalConnectionString(configuration.GetConnectionString("NHibernateConnection")
+                                    ?? throw new InvalidOperationException("NHibernate Database connection string is not configured."))
+            .ScanIn(typeof(Persistence.Migrations.NHibernate.CustomerMigration).Assembly).For.Migrations())
+        .AddLogging(config => config.AddConsole());
     // Configure NHibernate
     _ = services.AddSingleton(provider =>
     {
-      ISessionFactory sessionFactory = NHibernateHelper.CreateSessionFactory(connectionString);
+      ISessionFactory sessionFactory = NHibernateHelper.CreateSessionFactory(configuration.GetConnectionString("NHibernateConnection")
+                                    ?? throw new InvalidOperationException("NHibernate Database connection string is not configured."));
       IHostApplicationLifetime lifetime = provider.GetRequiredService<IHostApplicationLifetime>();
 
       // Dispose sessionFactory properly when the application stops
@@ -90,6 +93,23 @@ public static class DependencyInjectionExtension
     _ = services.AddScoped<ICustomerRepository, NHCustomerRepository>();
     _ = services.AddScoped<IEmployeeRepository, NHEmployeeRepository>();
     _ = services.AddScoped<IUnitOfWork, NHUnitOfWork>();
+
+    return services;
+  }
+
+  private static IServiceCollection AddDapper(
+    this IServiceCollection services,
+    IConfiguration configuration)
+  {
+    var connectionString = configuration.GetConnectionString("DapperConnection")
+                                 ?? throw new InvalidOperationException("Dapper Database connection string is not configured.");
+    // Register Dapper Database Connection
+    _ = services.AddScoped<IDbConnection>(provider => new NpgsqlConnection(connectionString));
+
+    // Register Dapper repositories
+    _ = services.AddScoped<ICustomerRepository, DapperCustomerRepository>();
+    _ = services.AddScoped<IEmployeeRepository, DapperEmployeeRepository>();
+    _ = services.AddScoped<IUnitOfWork, DapperUnitOfWork>();
 
     return services;
   }

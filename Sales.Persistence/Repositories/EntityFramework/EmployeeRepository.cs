@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Sales.Application.Employees;
 using Sales.Domain.Entities;
-using Sales.Persistence.Data.Contexts;
+using Sales.Persistence.Data.Configuration;
 
 namespace Sales.Persistence.Repositories.EntityFramework
 {

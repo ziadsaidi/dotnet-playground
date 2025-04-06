@@ -4,7 +4,7 @@ using Sales.Persistence.Constants;
 
 namespace Sales.Persistence.Configurations.NHibernate
 {
-  public class EmployeeMapping : ClassMap<Employee>
+  public sealed class EmployeeMapping : ClassMap<Employee>
   {
     public EmployeeMapping()
     {

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Sales.Application.Customers;
 using Sales.Domain.Entities;
-using Sales.Persistence.Data.Contexts;
+using Sales.Persistence.Data.Configuration;
 
 
 namespace Sales.Persistence.Repositories.EntityFramework

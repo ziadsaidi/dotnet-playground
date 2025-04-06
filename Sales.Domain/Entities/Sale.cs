@@ -9,9 +9,9 @@ namespace Sales.Domain.Entities
 
     private double _unitPrice;
     private double _totalPrice;
-    public virtual Guid Id { get; } = Guid.NewGuid();
+    public virtual Guid Id { get; set; } = Guid.NewGuid();
 
-    public virtual required DateTime Date { get; init; }
+    public virtual required DateTime CreationDate { get; init; }
 
     public virtual Guid? CustomerId { get; init; }  // Foreign key for Customer
     public virtual Customer? Customer { get; init; }

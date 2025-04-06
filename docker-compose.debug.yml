@@ -1,18 +1,58 @@
-# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
-
-version: '3.4'
 
 services:
   api:
     image: api
     build:
       context: .
-      dockerfile: Api/Dockerfile
-      args:
-        - configuration=Debug
+      dockerfile: Sales.Api/Dockerfile
     ports:
-      - 5001:5001
+      - "5001:5001"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      # For EF connection
+      - ConnectionStrings__DefaultConnection=Host=db-ef;Port=5432;Database=salesEf;Username=postgres;Password=postgres
+      # For NHibernate connection
+      - ConnectionStrings__NHConnection=Host=db-nh;Port=5432;Database=salesNh;Username=postgres;Password=postgres
+    depends_on:
+      - db-ef
+      - db-nh
+
+  db-ef:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: salesEf
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"  # Exposing different port to avoid conflict
     volumes:
-      - ~/.vsdbg:/remote_debugger:rw
+      - postgres_data_ef:/var/lib/postgresql/data
+
+  db-nh:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: salesNh
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"  # Exposing different port to avoid conflict
+    volumes:
+      - postgres_data_nh:/var/lib/postgresql/data
+
+  db-dapper:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: salesDapper
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"  # Exposing different port to avoid conflict
+    volumes:
+      - postgres_data_dapper:/var/lib/postgresql/data
+
+volumes:
+  postgres_data_ef:
+  postgres_data_nh:
+  postgres_data_dapper:
