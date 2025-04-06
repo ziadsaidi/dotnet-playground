@@ -2,7 +2,8 @@ using ErrorOr;
 using Sales.Application.Employees.Common.Responses;
 using Sales.Application.Interfaces;
 using Sales.Application.Mediator;
-using Sales.Domain.Common;
+using Sales.Domain.Entities;
+using Sales.Domain.Errors;
 
 namespace Sales.Application.Employees.Queries.GetAll
 {
@@ -11,7 +12,7 @@ namespace Sales.Application.Employees.Queries.GetAll
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     public async Task<ErrorOr<List<EmployeeResponse>>> HandleAsync(GetAllEmployeesQuery request, CancellationToken cancellationToken)
     {
-      List<Domain.Entities.Employee> employees = await _unitOfWork.Employees.GetEmployees().ToListAsync(cancellationToken);
+      List<Employee> employees = await _unitOfWork.Employees.GetEmployees().ToListAsync(cancellationToken);
 
       if (employees.Count == 0)
         return Errors.EmployeeErrors.NotFound;

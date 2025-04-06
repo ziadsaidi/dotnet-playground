@@ -53,7 +53,7 @@ namespace Sales.Tests.Application.Customers.Commands
       _ = MockUnitOfWork.Setup(u => u.Customers.ExistsAsync(model.Name, CancellationToken.None)).ReturnsAsync(true);
 
       // Act
-       var result = await _command.HandleAsync(model);
+      var result = await _command.HandleAsync(model);
 
       // Assert
       Assert.True(result.IsError);

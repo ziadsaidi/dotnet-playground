@@ -4,7 +4,6 @@ using NHibernate;
 using NHibernate.Dialect;
 using NHibernate.Driver;
 using Sales.Persistence.Configurations.NHibernate;
-using NHibernate.Tool.hbm2ddl;
 
 namespace Sales.Persistence.Data.Configuration
 {
@@ -17,7 +16,6 @@ namespace Sales.Persistence.Data.Configuration
               .ConnectionString(connectionString)
               .Driver<NpgsqlDriver>()
               .Dialect<PostgreSQLDialect>()
-
               .ShowSql()
           )
           .Mappings(m =>

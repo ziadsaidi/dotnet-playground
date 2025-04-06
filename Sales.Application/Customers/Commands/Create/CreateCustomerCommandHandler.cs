@@ -2,9 +2,9 @@ using FluentValidation;
 using ErrorOr;
 using Sales.Application.Customers.Common.Responses;
 using Sales.Domain.Entities;
-using Sales.Domain.Common;
 using Sales.Application.Interfaces;
 using Sales.Application.Mediator;
+using Sales.Domain.Errors;
 
 namespace Sales.Application.Customers.Commands.Create;
 
