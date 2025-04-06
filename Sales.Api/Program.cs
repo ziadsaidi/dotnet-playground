@@ -45,7 +45,7 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()
-    .WithOrigins(builder.Configuration["AllowedOrigins"]?.Split(',') ?? Array.Empty<string>())));
+    .WithOrigins(builder.Configuration["AllowedOrigins"]?.Split(',') ?? [])));
 
 // Register the Mediator
 builder.Services.AddScoped<IAppMediator, AppMediator>();
