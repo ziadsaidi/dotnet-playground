@@ -1,5 +1,4 @@
 using ErrorOr;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Sales.Application.Mediator;
 
@@ -9,12 +8,26 @@ public class AppMediator(IServiceProvider serviceProvider) : IAppMediator
 
   public async Task<ErrorOr<TResult>> Send<TResult>(IRequest<TResult> request, CancellationToken cancellationToken = default)
   {
-    // Find the appropriate handler for the request using Dependency Injection
     var handlerType = typeof(IRequestHandler<,>).MakeGenericType(request.GetType(), typeof(TResult));
-    var handler = _serviceProvider.GetRequiredService(handlerType);
+    var handler = _serviceProvider.GetService(handlerType);
 
-    // Use reflection to invoke the handler's Handle method
-    var handleMethod = handlerType.GetMethod("HandleAsync");
-    return await (Task<ErrorOr<TResult>>)handleMethod.Invoke(handler, [request, cancellationToken]);
+    if (handler is null)
+    {
+      return Error.Unexpected($"No handler registered for {request.GetType().Name}");
+    }
+
+    var handleMethod = handlerType.GetMethod(nameof(IRequestHandler<IRequest<TResult>, TResult>.HandleAsync));
+
+    if (handleMethod is null)
+    {
+      return Error.Unexpected($"Handler for {request.GetType().Name} does not implement HandleAsync correctly.");
+    }
+
+    // Appel de manière sécurisée avec cast
+    var result = handleMethod.Invoke(handler, [request, cancellationToken]);
+
+    return result is Task<ErrorOr<TResult>> task
+        ? await task
+        : Error.Unexpected("Invalid handler response type.");
   }
 }
