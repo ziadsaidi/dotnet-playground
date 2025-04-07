@@ -2,8 +2,8 @@
 using Moq;
 using Sales.Domain.Entities;
 using Sales.Tests.Common;
-using Sales.Domain.Common;
 using Sales.Application.Customers.Commands.Create;
+using Sales.Domain.Errors;
 
 namespace Sales.Tests.Application.Customers.Commands
 {

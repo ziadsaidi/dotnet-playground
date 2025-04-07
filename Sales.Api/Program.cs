@@ -11,8 +11,13 @@ using Sales.Application.Employees.Common.Responses;
 using Sales.Application.Employees.Queries.GetAll;
 using Sales.Application.Employees.Queries.GetById;
 using Sales.Application.Mediator;
+using Sales.Application.Products.Commands.Create;
+using Sales.Application.Products.Common.Responses;
+using Sales.Application.Products.Queries.GetAll;
+using Sales.Application.Products.Queries.GetById;
 using Sales.Infrastructure;
-using Sales.Persistence.Data.Configuration;
+using Sales.Persistence.Dapper.Data.Configuration;
+using Sales.Persistence.EF.Data.Configuration;
 using Scalar.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -38,7 +43,7 @@ _ = builder.Services.AddProblemDetails(options =>
           };
 });
 // Register Infrastructure with the selected provider
-builder.Services.AddInfrastructure(builder.Configuration, databaseProvider);
+builder.Services.AddPersistence(builder.Configuration, databaseProvider);
 
 // CORS configuration
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy
@@ -57,6 +62,9 @@ builder.Services.AddScoped<IRequestHandler<GetCustomerByIdQuery, CustomerRespons
 builder.Services.AddScoped<IRequestHandler<CreateEmployeeCommand, EmployeeResponse?>, CreateEmployeeCommandHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAllEmployeesQuery, List<EmployeeResponse>>, GetAllEmployeesQueryHandler>();
 builder.Services.AddScoped<IRequestHandler<GetEmployeeBydQuery, EmployeeResponse?>, GetEmployeeByIdQueryHandler>();
+builder.Services.AddScoped<IRequestHandler<CreateProductCommand, ProductResponse?>, CreateProductCommandHandler>();
+builder.Services.AddScoped<IRequestHandler<GetAllProductsQuery, List<ProductResponse>>, GetAllProductsQueryhandler>();
+builder.Services.AddScoped<IRequestHandler<GetProductByIdQuery, ProductResponse?>, GetProductByIdQueryHandler>();
 
 builder.Services.AddValidatorsFromAssembly(typeof(CreateCustomerModelValidator).Assembly);
 

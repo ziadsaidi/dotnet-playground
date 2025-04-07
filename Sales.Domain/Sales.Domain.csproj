@@ -19,4 +19,9 @@
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
 	</ItemGroup>
 
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Sales.Common\Sales.Common.csproj" />
+	</ItemGroup>
+
 </Project>
