@@ -3,6 +3,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Sales.Application\Sales.Application.csproj" />
     <ProjectReference Include="..\Sales.Persistence\Sales.Persistence.csproj" />
+    <ProjectReference Include="..\Sales.Persistence.EF\Sales.Persistence.EF.csproj" />
+    <ProjectReference Include="..\Sales.Persistence.NH\Sales.Persistence.NH.csproj" />
+    <ProjectReference Include="..\Sales.Persistence.Dapper\Sales.Persistence.Dapper.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
