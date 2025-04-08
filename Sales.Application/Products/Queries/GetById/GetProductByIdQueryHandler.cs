@@ -13,7 +13,10 @@ public class GetProductByIdQueryHandler(IUnitOfWork unitOfWork) : IRequestHandle
   {
     var product = await _unitOfWork.Products.GetByIdAsync(request.Id, cancellationToken);
     if (product is null)
-      return Errors.ProductErrors.NotFound;
+    {
+      return DomainErrors.ProductErrors.NotFound;
+    }
+
     return new ProductResponse(product.Id, product.Name, product.Price.GetValueOrDefault());
   }
 }

@@ -2,7 +2,10 @@ using System.Diagnostics;
 using FluentMigrator.Runner;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Sales.Application.Common;
 using Sales.Application.Customers.Commands.Create;
+using Sales.Application.Customers.Commands.Delete;
+using Sales.Application.Customers.Commands.Update;
 using Sales.Application.Customers.Common.Responses;
 using Sales.Application.Customers.Queries.GetAll;
 using Sales.Application.Customers.Queries.GetById;
@@ -39,7 +42,9 @@ _ = builder.Services.AddProblemDetails(options =>
           {
             context.ProblemDetails.Extensions["traceId"] = Activity.Current?.Id ?? context.HttpContext.TraceIdentifier;
             if (!environment.IsDevelopment())
+            {
               context.ProblemDetails.Detail = "An error occurred. Contact support if the problem persists.";
+            }
           };
 });
 // Register Infrastructure with the selected provider
@@ -56,12 +61,17 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy
 builder.Services.AddScoped<IAppMediator, AppMediator>();
 
 // Register all handlers (queries and commands)
+//customers
 builder.Services.AddScoped<IRequestHandler<CreateCustomerCommand, CustomerResponse?>, CreateCustomerCommandHandler>();
+builder.Services.AddScoped<IRequestHandler<UpdateCustomerCommand, Unit>, UpdateCustomerCommandHandler>();
+builder.Services.AddScoped<IRequestHandler<DeleteCustomerCommand, Unit>, DeleteCustomerCommandHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAllCustomersQuery, List<CustomerResponse>>, GetAllCustomersQueryHandler>();
 builder.Services.AddScoped<IRequestHandler<GetCustomerByIdQuery, CustomerResponse?>, GetCustomerByIdQueryHandler>();
+//employees
 builder.Services.AddScoped<IRequestHandler<CreateEmployeeCommand, EmployeeResponse?>, CreateEmployeeCommandHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAllEmployeesQuery, List<EmployeeResponse>>, GetAllEmployeesQueryHandler>();
 builder.Services.AddScoped<IRequestHandler<GetEmployeeBydQuery, EmployeeResponse?>, GetEmployeeByIdQueryHandler>();
+//products
 builder.Services.AddScoped<IRequestHandler<CreateProductCommand, ProductResponse?>, CreateProductCommandHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAllProductsQuery, List<ProductResponse>>, GetAllProductsQueryhandler>();
 builder.Services.AddScoped<IRequestHandler<GetProductByIdQuery, ProductResponse?>, GetProductByIdQueryHandler>();

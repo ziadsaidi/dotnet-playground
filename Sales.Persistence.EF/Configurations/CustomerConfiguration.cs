@@ -9,12 +9,12 @@ public sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 {
   public void Configure(EntityTypeBuilder<Customer> builder)
   {
-    _ = builder.HasKey(e => e.Id)
+    _ = builder.HasKey(static e => e.Id)
             .HasName("customer_id");
-    _ = builder.Property(e => e.Id)
+    _ = builder.Property(static e => e.Id)
        .ValueGeneratedNever()
        .HasColumnName("id");
-    _ = builder.Property(e => e.Name)
+    _ = builder.Property(static e => e.Name)
          .IsRequired()
          .HasColumnName("name");
     _ = builder.ToTable(TableNames.Customers);

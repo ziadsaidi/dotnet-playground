@@ -17,28 +17,24 @@ public sealed class CreateCustomerCommandHandler(
 
   public async Task<ErrorOr<CustomerResponse?>> HandleAsync(CreateCustomerCommand model, CancellationToken cancellationToken = default)
   {
-    // Validate using FluentValidation
     var validationResult = await _validator.ValidateAsync(model, cancellationToken);
 
     if (!validationResult.IsValid)
     {
       return validationResult.Errors
-          .ConvertAll(error => Error.Validation(error.PropertyName, error.ErrorMessage));
+          .ConvertAll(static error => Error.Validation(error.PropertyName, error.ErrorMessage));
     }
 
-    // Check for duplicates
     if (await _unitOfWork.Customers.ExistsAsync(model.Name, cancellationToken))
     {
-      return Errors.CustomerErrors.DuplicateName;
+      return DomainErrors.CustomerErrors.DuplicateName;
     }
 
-    // Create and persist the customer
-    Customer customer = new() { Name = model.Name };
+    var customer = Customer.Create(model.Name);
 
     await _unitOfWork.Customers.AddAsync(customer, cancellationToken);
     _ = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-    // Return result
     return new CustomerResponse(customer.Id, customer.Name);
   }
 }

@@ -16,7 +16,7 @@ public sealed class GetEmployeeByIdQueryHandler(IUnitOfWork unitOfWork) : IReque
     Employee? customer = await _unitOfWork.Employees.GetByIdAsync(request.Id, cancellationToken);
 
     return customer is null
-        ? Errors.EmployeeErrors.NotFound
+        ? DomainErrors.EmployeeErrors.NotFound
         : new EmployeeResponse(customer.Id, customer.Name);
   }
 }

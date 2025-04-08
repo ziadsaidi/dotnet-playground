@@ -21,13 +21,13 @@ public sealed class CreateEmployeeCommandHandler(IUnitOfWork unitOfWork, IValida
     if (!validationResult.IsValid)
     {
       return validationResult.Errors
-          .ConvertAll(error => Error.Validation(error.PropertyName, error.ErrorMessage));
+          .ConvertAll(static error => Error.Validation(error.PropertyName, error.ErrorMessage));
     }
 
     // Check for duplicates
     if (await _unitOfWork.Employees.ExistsAsync(model.Name, cancellationToken))
     {
-      return Errors.EmployeeErrors.DuplicateName;
+      return DomainErrors.EmployeeErrors.DuplicateName;
     }
 
     // Create and persist the customer

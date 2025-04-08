@@ -14,7 +14,9 @@ public class GetAllProductsQueryhandler(IUnitOfWork unitOfWork) : IRequestHandle
     var products = await _unitOfWork.Products.GetProducts().ToListAsync(cancellationToken);
 
     if (products.Count == 0)
-      return Errors.ProductErrors.NotFound;
+    {
+      return DomainErrors.ProductErrors.NotFound;
+    }
 
     return products.ConvertAll(static p => new ProductResponse(p.Id, p.Name, p.Price.GetValueOrDefault()));
   }

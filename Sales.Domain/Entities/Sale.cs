@@ -9,7 +9,7 @@ namespace Sales.Domain.Entities
 
     private double _unitPrice;
     private double _totalPrice;
-    public virtual Guid Id { get; set; } = Guid.NewGuid();
+    public virtual Guid Id { get; set; } = Guid.CreateVersion7();
 
     public virtual required DateTime CreationDate { get; init; }
 

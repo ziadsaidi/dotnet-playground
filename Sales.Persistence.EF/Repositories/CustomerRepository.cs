@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore;
 using Sales.Application.Customers;
 using Sales.Domain.Entities;
@@ -6,10 +5,14 @@ using Sales.Persistence.EF.Data.Configuration;
 
 namespace Sales.Persistence.EF.Repositories;
 
-using EF = Microsoft.EntityFrameworkCore.EF;
-public class CustomerRepository(AppDbContext context) : ICustomerRepository
+public class CustomerRepository : ICustomerRepository
 {
-  private readonly AppDbContext _context = context;
+  private readonly AppDbContext _context;
+
+  public CustomerRepository(AppDbContext context)
+  {
+    _context = context;
+  }
 
   public Task<Customer?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
   {
@@ -20,7 +23,7 @@ public class CustomerRepository(AppDbContext context) : ICustomerRepository
   {
     return _context.Customers
         .AsNoTracking()
-        .AnyAsync(c => EF.Functions.Like(c.Name, name), cancellationToken);
+        .AnyAsync(c => c.Name == name, cancellationToken);
   }
 
   public Task AddAsync(Customer customer, CancellationToken cancellationToken)
@@ -31,5 +34,16 @@ public class CustomerRepository(AppDbContext context) : ICustomerRepository
   public IAsyncEnumerable<Customer> GetCustomers()
   {
     return _context.Customers.AsNoTracking().AsAsyncEnumerable();
+  }
+
+  public void Update(Customer customer)
+  {
+    _context.Update(customer);
+  }
+
+  public Task DeleteAsync(Customer customer, CancellationToken cancellationToken)
+  {
+    _context.Customers.Remove(customer);
+    return Task.CompletedTask;
   }
 }

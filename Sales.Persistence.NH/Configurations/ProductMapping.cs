@@ -10,21 +10,21 @@ public sealed class ProductMapping : ClassMap<Product>
   {
     Table(TableNames.Products);
 
-    _ = Id(x => x.Id)
+    _ = Id(static x => x.Id)
            .Column("id")
            .GeneratedBy.GuidComb()
            .CustomSqlType("uuid")
            .Not.Nullable();
 
-    _ = Map(x => x.Name)
+    _ = Map(static x => x.Name)
         .Column("name")
         .Not.Nullable();
 
-    _ = Map(x => x.Price)
+    _ = Map(static x => x.Price)
          .Column("price")
          .Nullable();
 
-    _ = HasMany(x => x.Sales)
+    _ = HasMany(static x => x.Sales)
         .Inverse()
         .Cascade.All()
         .KeyColumn("product_id");

@@ -18,7 +18,7 @@ namespace Sales.Persistence.NH.Data.Configuration
               .Dialect<PostgreSQLDialect>()
               .ShowSql()
           )
-          .Mappings(m =>
+          .Mappings(static m =>
           {
             _ = m.FluentMappings.AddFromAssemblyOf<CustomerMapping>();
             _ = m.FluentMappings.AddFromAssemblyOf<EmployeeMapping>();

@@ -8,7 +8,8 @@ using Sales.Persistence.NH.Repositories;
 namespace Sales.Persistence.NH.UnitOfWork
 {
   public class UnitOfWork : IUnitOfWork, IDisposable
-  { private readonly ISession _session;
+  {
+    private readonly ISession _session;
     private ITransaction? _transaction;
     private ICustomerRepository? _customerRepository;
     private IEmployeeRepository? _employeeRepository;

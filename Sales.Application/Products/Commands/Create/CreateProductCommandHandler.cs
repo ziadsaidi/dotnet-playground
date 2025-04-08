@@ -20,11 +20,11 @@ public sealed class CreateProductCommandHandler(IUnitOfWork unitOfWork, IValidat
     if (!validationResult.IsValid)
     {
       return validationResult.Errors
-          .ConvertAll(error => Error.Validation(error.PropertyName, error.ErrorMessage));
+          .ConvertAll(static error => Error.Validation(error.PropertyName, error.ErrorMessage));
     }
     if (await _unitOfWork.Products.ExistsAsync(request.Name, cancellationToken))
     {
-      return Errors.ProductErrors.DuplicateName;
+      return DomainErrors.ProductErrors.DuplicateName;
     }
     var newProduct = new Product
     {

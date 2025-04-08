@@ -16,9 +16,11 @@ public sealed class GetAllCustomersQueryHandler(IUnitOfWork unitOfWork) : IReque
     var customers = await _unitOfWork.Customers.GetCustomers().ToListAsync(cancellationToken);
 
     if (customers.Count == 0)
-      return Errors.CustomerErrors.NotFound;
+    {
+      return DomainErrors.CustomerErrors.NotFound;
+    }
 
-    return customers.ConvertAll(customer => new CustomerResponse(
+    return customers.ConvertAll(static customer => new CustomerResponse(
         customer.Id,
         customer.Name));
   }

@@ -25,8 +25,8 @@ namespace Sales.Tests.Common
       MockValidator = new Mock<IValidator<CreateCustomerCommand>>();
 
       // Set up default mock behavior
-      _ = MockUnitOfWork.Setup(u => u.Customers).Returns(MockCustomerRepository.Object);
-      _ = MockUnitOfWork.Setup(u => u.Employees).Returns(MockEmployeeRepository.Object);
+      _ = MockUnitOfWork.Setup(static u => u.Customers).Returns(MockCustomerRepository.Object);
+      _ = MockUnitOfWork.Setup(static u => u.Employees).Returns(MockEmployeeRepository.Object);
     }
 
     /// <summary>
@@ -34,10 +34,7 @@ namespace Sales.Tests.Common
     /// </summary>
     protected static Customer CreateFakeCustomer(string name = "Test Customer")
     {
-      return new Customer
-      {
-        Name = name
-      };
+      return Customer.Create(name);
     }
   }
 }

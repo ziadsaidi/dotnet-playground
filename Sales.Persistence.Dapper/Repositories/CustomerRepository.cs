@@ -9,10 +9,10 @@ public class CustomerRepository(IDbConnection dbConnection) : ICustomerRepositor
 {
   private readonly IDbConnection _dbConnection = dbConnection;
 
-  public async Task<Customer?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+  public Task<Customer?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
   {
     const string sql = "SELECT * FROM customers WHERE id = @Id";
-    return await _dbConnection.QuerySingleOrDefaultAsync<Customer>(sql, new { Id = id });
+    return _dbConnection.QuerySingleOrDefaultAsync<Customer>(sql, new { Id = id });
   }
 
   public async IAsyncEnumerable<Customer> GetCustomers()
@@ -22,11 +22,9 @@ public class CustomerRepository(IDbConnection dbConnection) : ICustomerRepositor
 
     while (reader.Read())
     {
-      yield return new Customer
-      {
-        Id = reader.GetGuid(reader.GetOrdinal("id")),
-        Name = reader.GetString(reader.GetOrdinal("name"))
-      };
+      yield return Customer.Create(
+        id: reader.GetGuid(reader.GetOrdinal("id")),
+        name: reader.GetString(reader.GetOrdinal("name")));
     }
   }
 
@@ -37,9 +35,21 @@ public class CustomerRepository(IDbConnection dbConnection) : ICustomerRepositor
     return count > 0;
   }
 
-  public async Task AddAsync(Customer customer, CancellationToken cancellationToken)
+  public Task AddAsync(Customer customer, CancellationToken cancellationToken)
   {
     const string sql = "INSERT INTO customers (id, name) VALUES (@Id, @Name)";
-    await _dbConnection.ExecuteAsync(sql, customer);
+    return _dbConnection.ExecuteAsync(sql, customer);
+  }
+
+  public void Update(Customer customer)
+  {
+    const string sql = "UPDATE customers SET name = @Name WHERE id = @Id";
+    _dbConnection.Execute(sql, customer);
+  }
+
+  public Task DeleteAsync(Customer customer, CancellationToken cancellationToken)
+  {
+    const string sql = "DELETE FROM customers WHERE id = @Id";
+    return _dbConnection.ExecuteAsync(sql, new { customer.Id });
   }
 }

@@ -57,7 +57,7 @@ namespace Sales.Tests.Application.Customers.Commands
 
       // Assert
       Assert.True(result.IsError);
-      Assert.Contains(Errors.CustomerErrors.DuplicateName, result.Errors);
+      Assert.Contains(DomainErrors.CustomerErrors.DuplicateName, result.Errors);
 
       // Verify repository methods
       MockUnitOfWork.Verify(u => u.Customers.ExistsAsync(model.Name, CancellationToken.None), Times.Once);

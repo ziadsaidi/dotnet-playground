@@ -16,7 +16,7 @@ public sealed class GetCustomerByIdQueryHandler(IUnitOfWork unitOfWork) : IReque
     Customer? customer = await _unitOfWork.Customers.GetByIdAsync(query.Id, cancellationToken);
 
     return customer is null
-        ? Errors.CustomerErrors.NotFound
+        ? DomainErrors.CustomerErrors.NotFound
         : new CustomerResponse(customer.Id, customer.Name);
   }
 }

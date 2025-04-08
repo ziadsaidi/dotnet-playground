@@ -6,7 +6,7 @@ public sealed class CreateCustomerModelValidator : AbstractValidator<CreateCusto
 {
   public CreateCustomerModelValidator()
   {
-    _ = RuleFor(x => x.Name)
+    _ = RuleFor(static x => x.Name)
         .NotEmpty().WithMessage("Name is required")
         .MaximumLength(100).WithMessage("Name cannot exceed 100 characters")
         .MinimumLength(2).WithMessage("Name must be at least 2 characters");

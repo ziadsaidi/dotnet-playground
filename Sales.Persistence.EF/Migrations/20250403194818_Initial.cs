@@ -13,35 +13,35 @@ namespace Persistence.Migrations
     {
       _ = migrationBuilder.CreateTable(
           name: "customers",
-          columns: table => new
+          columns: static table => new
           {
             id = table.Column<Guid>(type: "uuid", nullable: false),
             name = table.Column<string>(type: "text", nullable: false)
           },
-          constraints: table => table.PrimaryKey("customer_id", x => x.id));
+          constraints: static table => table.PrimaryKey("customer_id", static x => x.id));
 
       _ = migrationBuilder.CreateTable(
           name: "employees",
-          columns: table => new
+          columns: static table => new
           {
             id = table.Column<Guid>(type: "uuid", nullable: false),
             name = table.Column<string>(type: "text", nullable: false)
           },
-          constraints: table => table.PrimaryKey("employee_id", x => x.id));
+          constraints: static table => table.PrimaryKey("employee_id", static x => x.id));
 
       _ = migrationBuilder.CreateTable(
           name: "products",
-          columns: table => new
+          columns: static table => new
           {
             id = table.Column<Guid>(type: "uuid", nullable: false),
             name = table.Column<string>(type: "text", nullable: false),
             price = table.Column<double>(type: "double precision", nullable: true)
           },
-          constraints: table => table.PrimaryKey("product_id", x => x.id));
+          constraints: static table => table.PrimaryKey("product_id", static x => x.id));
 
       _ = migrationBuilder.CreateTable(
           name: "sales",
-          columns: table => new
+          columns: static table => new
           {
             id = table.Column<Guid>(type: "uuid", nullable: false),
             date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -52,22 +52,22 @@ namespace Persistence.Migrations
             quantity = table.Column<int>(type: "integer", nullable: false),
             total_price = table.Column<double>(type: "double precision", nullable: false)
           },
-          constraints: table =>
+          constraints: static table =>
           {
-            _ = table.PrimaryKey("sale_id", x => x.id);
+            _ = table.PrimaryKey("sale_id", static x => x.id);
             _ = table.ForeignKey(
                       name: "sales_customer_fkey",
-                      column: x => x.customer_id,
+                      column: static x => x.customer_id,
                       principalTable: "customers",
                       principalColumn: "id");
             _ = table.ForeignKey(
                       name: "sales_employee_fkey",
-                      column: x => x.employee_id,
+                      column: static x => x.employee_id,
                       principalTable: "employees",
                       principalColumn: "id");
             _ = table.ForeignKey(
                       name: "sales_product_fkey",
-                      column: x => x.product_id,
+                      column: static x => x.product_id,
                       principalTable: "products",
                       principalColumn: "id");
           });

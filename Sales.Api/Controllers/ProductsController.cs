@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using ErrorOr;
 using Sales.Application.Mediator;
 using Sales.Application.Products.Commands.Create;
 using Sales.Application.Products.Queries.GetAll;
 using Sales.Application.Products.Queries.GetById;
+using Sales.Api.Extensions;
 namespace Sales.Api.Controllers;
 
 [ApiController]
@@ -32,19 +32,7 @@ public sealed class ProductsController(
             nameof(GetById),
             new { id = response?.Id },
             response),
-        errors => errors?.First().Type switch
-        {
-          ErrorType.Validation => BadRequest(errors),
-          ErrorType.Conflict => Conflict(errors),
-          ErrorType.NotFound => NotFound(errors),
-          _ => StatusCode(StatusCodes.Status500InternalServerError,
-                    new ProblemDetails
-                    {
-                      Status = StatusCodes.Status500InternalServerError,
-                      Title = "An unexpected error occurred",
-                      Detail = string.Join(", ", errors!.Select(e => e.Description))
-                    })
-        });
+        errors => errors.ToActionResult());
   }
 
   /// <summary>
@@ -59,13 +47,7 @@ public sealed class ProductsController(
 
     return result.Match(
         Ok,
-        errors => StatusCode(StatusCodes.Status500InternalServerError,
-            new ProblemDetails
-            {
-              Status = StatusCodes.Status500InternalServerError,
-              Title = "An unexpected error occurred",
-              Detail = string.Join(", ", errors!.Select(e => e.Description))
-            }));
+        errors => errors.ToActionResult());
   }
 
   /// <summary>
@@ -86,16 +68,6 @@ public sealed class ProductsController(
 
     return result.Match(
         Ok,
-        errors => errors?.First().Type switch
-        {
-          ErrorType.NotFound => NotFound(errors),
-          _ => StatusCode(StatusCodes.Status500InternalServerError,
-                    new ProblemDetails
-                    {
-                      Status = StatusCodes.Status500InternalServerError,
-                      Title = "An unexpected error occurred",
-                      Detail = string.Join(", ", errors!.Select(e => e.Description))
-                    })
-        });
+        errors => errors.ToActionResult());
   }
 }

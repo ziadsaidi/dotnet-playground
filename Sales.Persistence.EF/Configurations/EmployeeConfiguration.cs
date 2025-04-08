@@ -8,12 +8,12 @@ public sealed class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
 {
   public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Employee> builder)
   {
-    _ = builder.HasKey(e => e.Id)
+    _ = builder.HasKey(static e => e.Id)
            .HasName("employee_id");
-    _ = builder.Property(e => e.Id)
+    _ = builder.Property(static e => e.Id)
            .ValueGeneratedNever()
            .HasColumnName("id");
-    _ = builder.Property(e => e.Name)
+    _ = builder.Property(static e => e.Name)
            .IsRequired()
            .HasColumnName("name");
     _ = builder.ToTable(TableNames.Employees);

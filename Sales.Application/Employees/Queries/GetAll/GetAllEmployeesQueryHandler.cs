@@ -15,9 +15,11 @@ public sealed class GetAllEmployeesQueryHandler(IUnitOfWork unitOfWork) : IReque
     List<Employee> employees = await _unitOfWork.Employees.GetEmployees().ToListAsync(cancellationToken);
 
     if (employees.Count == 0)
-      return Errors.EmployeeErrors.NotFound;
+    {
+      return DomainErrors.EmployeeErrors.NotFound;
+    }
 
-    return employees.ConvertAll(customer => new EmployeeResponse(
+    return employees.ConvertAll(static customer => new EmployeeResponse(
         customer.Id,
         customer.Name));
   }

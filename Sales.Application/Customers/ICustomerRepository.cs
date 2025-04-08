@@ -11,5 +11,9 @@ namespace Sales.Application.Customers
     Task<bool> ExistsAsync(string name, CancellationToken cancellationToken);
 
     Task AddAsync(Customer customer, CancellationToken cancellationToken);
+
+    void Update(Customer customer);
+
+    Task DeleteAsync(Customer customer, CancellationToken cancellationToken);
   }
 }

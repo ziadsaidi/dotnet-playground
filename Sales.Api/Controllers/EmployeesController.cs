@@ -5,6 +5,7 @@ using Sales.Application.Employees.Commnads.Create;
 using Sales.Application.Employees.Queries.GetAll;
 using Sales.Application.Employees.Queries.GetById;
 using Sales.Application.Mediator;
+using Sales.Api.Extensions;
 
 namespace Sales.Api.Controllers;
 
@@ -32,19 +33,7 @@ public sealed class EmployeesController(IAppMediator mediator) : ControllerBase
             nameof(Create),
             new { id = response?.Id },
             response),
-        errors => errors?.First().Type switch
-        {
-          ErrorType.Validation => BadRequest(errors),
-          ErrorType.Conflict => Conflict(errors),
-          ErrorType.NotFound => NotFound(errors),
-          _ => StatusCode(StatusCodes.Status500InternalServerError,
-                      new ProblemDetails
-                      {
-                        Status = StatusCodes.Status500InternalServerError,
-                        Title = "An unexpected error occurred",
-                        Detail = string.Join(", ", errors!.Select(e => e.Description))
-                      })
-        });
+        errors => errors.ToActionResult());
   }
 
   /// <summary>
@@ -59,13 +48,7 @@ public sealed class EmployeesController(IAppMediator mediator) : ControllerBase
 
     return result.Match(
         Ok,
-        errors => StatusCode(StatusCodes.Status500InternalServerError,
-                  new ProblemDetails
-                  {
-                    Status = StatusCodes.Status500InternalServerError,
-                    Title = "An unexpected error occurred",
-                    Detail = string.Join(", ", errors!.Select(e => e.Description))
-                  }));
+        errors => errors.ToActionResult());
   }
 
   /// <summary>
@@ -83,20 +66,6 @@ public sealed class EmployeesController(IAppMediator mediator) : ControllerBase
   public async Task<IActionResult> GetById(Guid id)
   {
     var result = await _mediator.Send(new GetEmployeeBydQuery(id), CancellationToken.None);
-
-    return result.Match(
-        Ok,
-        errors => errors?.First().Type switch
-        {
-          ErrorType.NotFound => NotFound(errors),
-          _ => StatusCode(StatusCodes.Status500InternalServerError,
-                      new ProblemDetails
-                      {
-                        Status = StatusCodes.Status500InternalServerError,
-                        Title = "An unexpected error occurred",
-                        Detail = string.Join(", ", errors!.Select(e => e.Description))
-                      })
-        });
+    return result.Match(Ok, errors => errors.ToActionResult());
   }
 }
-

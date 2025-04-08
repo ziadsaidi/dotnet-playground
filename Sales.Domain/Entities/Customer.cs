@@ -1,13 +1,34 @@
 using Sales.Domain.Common;
 
-namespace Sales.Domain.Entities
+namespace Sales.Domain.Entities;
+
+public class Customer : IEntity
 {
-  public class Customer : IEntity
+  public Customer()
+  { }
+  private Customer(Guid id, string name)
   {
-    public virtual Guid Id { get; set; } = Guid.NewGuid();
+    Id = id;
+    Name = name;
+    Sales = [];
+  }
 
-    public virtual required string Name { get; init; }
+  public virtual Guid Id { get; protected set; }
+  public virtual string Name { get; protected set; } = null!;
+  public virtual ICollection<Sale> Sales { get; protected init; } = [];
 
-    public virtual ICollection<Sale> Sales { get; init; } = [];
+  public static Customer Create(string name)
+  {
+    return new Customer(Guid.CreateVersion7(), name);
+  }
+
+  public static Customer Create(Guid id, string name)
+  {
+    return new Customer(id, name);
+  }
+
+  public virtual void Update(string newName)
+  {
+    Name = newName;
   }
 }

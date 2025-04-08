@@ -24,7 +24,7 @@ public static class NHDependencyInjection
     string connectionString = configuration.GetConnectionString("NHibernateConnection")
         ?? throw new InvalidOperationException("NHibernate Database connection string is not configured.");
 
- // Register the common database connection for Dapper and NHibernate
+    // Register the common database connection for Dapper and NHibernate
     _ = services.AddFluentMigratorCore()
         .ConfigureRunner(runner => runner
             .AddPostgres()
