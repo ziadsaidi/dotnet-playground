@@ -2,6 +2,8 @@ using System.Diagnostics;
 using FluentMigrator.Runner;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using NHibernate.Dialect.Function;
+using Sales.API.Authorization;
 using Sales.Application.Common;
 using Sales.Application.Customers.Commands.Create;
 using Sales.Application.Customers.Commands.Delete;
@@ -13,11 +15,14 @@ using Sales.Application.Employees.Commnads.Create;
 using Sales.Application.Employees.Common.Responses;
 using Sales.Application.Employees.Queries.GetAll;
 using Sales.Application.Employees.Queries.GetById;
+using Sales.Application.Interfaces;
 using Sales.Application.Mediator;
 using Sales.Application.Products.Commands.Create;
 using Sales.Application.Products.Common.Responses;
 using Sales.Application.Products.Queries.GetAll;
 using Sales.Application.Products.Queries.GetById;
+using Sales.Application.Users.Commands.Login;
+using Sales.Application.Users.Commands.Register;
 using Sales.Infrastructure;
 using Sales.Persistence.Dapper.Data.Configuration;
 using Sales.Persistence.EF.Data.Configuration;
@@ -31,7 +36,8 @@ DatabaseProvider databaseProvider = Enum.TryParse<DatabaseProvider>(providerName
     ? provider
     : DatabaseProvider.EntityFramework;
 
-builder.Services.AddOpenApi();  // Enable OpenAPI with Scalar
+_ = builder.Services.AddOpenApi(options => options.AddDocumentTransformer<BearerSecuritySchemeTransformer>());
+
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 // Exception handling
@@ -49,6 +55,12 @@ _ = builder.Services.AddProblemDetails(options =>
 });
 // Register Infrastructure with the selected provider
 builder.Services.AddPersistence(builder.Configuration, databaseProvider);
+
+// Load secret from configuration
+string jwtSecret = builder.Configuration["JwtSettings:Secret"] ?? "DefaultSuperSecretKey";
+
+// Register Infrastructure Services
+builder.Services.AddInfrastructure(jwtSecret);
 
 // CORS configuration
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy
@@ -75,22 +87,48 @@ builder.Services.AddScoped<IRequestHandler<GetEmployeeBydQuery, EmployeeResponse
 builder.Services.AddScoped<IRequestHandler<CreateProductCommand, ProductResponse?>, CreateProductCommandHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAllProductsQuery, List<ProductResponse>>, GetAllProductsQueryhandler>();
 builder.Services.AddScoped<IRequestHandler<GetProductByIdQuery, ProductResponse?>, GetProductByIdQueryHandler>();
+//users
+builder.Services.AddScoped<IRequestHandler<RegisterUserCommand, string>, RegisterUserCommandHandler>();
+builder.Services.AddScoped<IRequestHandler<LoginUserCommand, string>, LoginUserCammandHandler>();
 
 builder.Services.AddValidatorsFromAssembly(typeof(CreateCustomerModelValidator).Assembly);
 
 // Add Controllers
 builder.Services.AddControllers();
 
+// Security headers
+// _ = builder.Services
+//     .AddSecurityHeaderPolicies()
+//     .SetPolicySelector(_ => builder.Environment.IsDevelopment()
+//         ? new HeaderPolicyCollection()
+//             .AddFrameOptionsDeny()
+//             .AddContentTypeOptionsNoSniff()
+//             .AddStrictTransportSecurityMaxAge()
+//             .RemoveServerHeader()
+//             .AddReferrerPolicyNoReferrer()
+//             .AddPermissionsPolicyWithDefaultSecureDirectives()
+//         : new HeaderPolicyCollection().AddDefaultApiSecurityHeaders());
+
 WebApplication app = builder.Build();
+
+// Exception handling
+_ = app.UseStatusCodePages();
+_ = app.Environment.IsDevelopment()
+    ? app.UseDeveloperExceptionPage()
+    : app.UseExceptionHandler();
 
 // Middleware
 app.UseRouting()
    .UseCors()
+   .UseAuthentication()
+   .UseAuthorization()
    .UseEndpoints(endpoints => endpoints.MapControllers());
 
-// OpenAPI
 app.MapOpenApi();
-app.MapScalarApiReference(options => options.WithTitle("API"));
+app.MapScalarApiReference(options =>
+options
+      .WithTitle("API")
+);
 
 // Migrate Database based on selected provider
 await using AsyncServiceScope scope = app.Services.CreateAsyncScope();

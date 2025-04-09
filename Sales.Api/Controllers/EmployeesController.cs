@@ -1,14 +1,16 @@
 
 using Microsoft.AspNetCore.Mvc;
-using ErrorOr;
 using Sales.Application.Employees.Commnads.Create;
 using Sales.Application.Employees.Queries.GetAll;
 using Sales.Application.Employees.Queries.GetById;
 using Sales.Application.Mediator;
 using Sales.Api.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Sales.Api.Controllers;
 
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/problem+json")]

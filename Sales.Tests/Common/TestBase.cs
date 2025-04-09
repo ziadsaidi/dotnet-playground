@@ -1,9 +1,7 @@
 
 using FluentValidation;
 using Moq;
-using Sales.Application.Customers;
 using Sales.Application.Customers.Commands.Create;
-using Sales.Application.Employees;
 using Sales.Application.Interfaces;
 using Sales.Domain.Entities;
 

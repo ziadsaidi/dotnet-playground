@@ -1,8 +1,5 @@
 
-using Sales.Application.Customers;
-using Sales.Application.Employees;
 using Sales.Application.Interfaces;
-using Sales.Application.Products;
 using Sales.Persistence.EF.Data.Configuration;
 using Sales.Persistence.EF.Repositories;
 
@@ -16,11 +13,15 @@ namespace Sales.Persistence.EF.UnitOfWork
 
     private IProductRepository? _productRepository;
 
+    private IUserRepository? _userRepository;
+
     public ICustomerRepository Customers => _customerRepository ??= new CustomerRepository(_context);
 
     public IEmployeeRepository Employees => _employeeRepository ??= new EmployeeRepository(_context);
 
     public IProductRepository Products => _productRepository ??= new ProductRepository(_context);
+
+    public IUserRepository Users => _userRepository ??= new UserRepository(_context);
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

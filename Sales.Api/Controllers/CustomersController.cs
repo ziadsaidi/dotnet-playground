@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using ErrorOr;
 using Sales.Application.Mediator;
 using Sales.Application.Customers.Commands.Create;
 using Sales.Application.Customers.Queries.GetAll;
@@ -8,9 +7,12 @@ using Sales.Application.Customers.Commands.Update;
 using Sales.Api.Controllers.Models;
 using Sales.Api.Extensions;
 using Sales.Application.Customers.Commands.Delete;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Sales.Api.Controllers;
 
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/problem+json")]
@@ -32,6 +34,7 @@ public sealed class CustomersController(IAppMediator mediator) : ControllerBase
     );
   }
 
+
   [HttpPut("{id:guid}")]
   [ProducesResponseType(StatusCodes.Status204NoContent)]
   [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -45,6 +48,7 @@ public sealed class CustomersController(IAppMediator mediator) : ControllerBase
         errors => errors.ToActionResult()
     );
   }
+
 
   [HttpGet]
   [ProducesResponseType(StatusCodes.Status200OK)]

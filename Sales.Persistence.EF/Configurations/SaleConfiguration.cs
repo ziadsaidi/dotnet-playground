@@ -29,21 +29,21 @@ public sealed class SaleConfiguration : IEntityTypeConfiguration<Sale>
            .HasColumnName("total_price");
 
     // Relationships 
-    _ = builder.HasOne(static c => c.Customer)
-           .WithMany(static c => c.Sales)
-           .HasForeignKey(static c => c.CustomerId)  // Use the foreign key here
+    _ = builder.HasOne(c => c.Customer)
+           .WithMany(c => c.Sales)
+           .HasForeignKey(c => c.CustomerId)  // Use the foreign key here
            .OnDelete(DeleteBehavior.ClientSetNull)
            .HasConstraintName("sales_customer_fkey");
 
-    _ = builder.HasOne(static c => c.Employee)
-           .WithMany(static c => c.Sales)
-           .HasForeignKey(static c => c.EmployeeId)  // Use the foreign key here
+    _ = builder.HasOne(c => c.Employee)
+           .WithMany(c => c.Sales)
+           .HasForeignKey(c => c.EmployeeId)  // Use the foreign key here
            .OnDelete(DeleteBehavior.ClientSetNull)
            .HasConstraintName("sales_employee_fkey");
 
-    _ = builder.HasOne(static c => c.Product)
-           .WithMany(static c => c.Sales)
-           .HasForeignKey(static c => c.ProductId)  // Use the foreign key here
+    _ = builder.HasOne(c => c.Product)
+           .WithMany(c => c.Sales)
+           .HasForeignKey(c => c.ProductId)  // Use the foreign key here
            .OnDelete(DeleteBehavior.ClientSetNull)
            .HasConstraintName("sales_product_fkey");
     _ = builder.ToTable(TableNames.Sales);

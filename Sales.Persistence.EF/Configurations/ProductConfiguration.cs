@@ -9,14 +9,20 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
   public void Configure(EntityTypeBuilder<Product> builder)
   {
-    _ = builder.HasKey(static e => e.Id)
+    _ = builder.HasKey(e => e.Id)
       .HasName("product_id");
-    _ = builder.Property(static e => e.Id)
+    _ = builder.Property(e => e.Id)
     .ValueGeneratedNever()
     .HasColumnName("id");
-    _ = builder.Property(static e => e.Name)
+
+    _ = builder.Property(e => e.Name)
     .IsRequired()
     .HasColumnName("name");
+    _ = builder.ToTable(TableNames.Products);
+
+    _ = builder.Property(e => e.Price)
+         .IsRequired()
+         .HasColumnName("price");
     _ = builder.ToTable(TableNames.Products);
   }
 }

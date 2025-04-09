@@ -10,38 +10,38 @@ public sealed class SaleMapping : ClassMap<Sale>
   {
     Table(TableNames.Sales);
 
-    _ = Id(static x => x.Id)
+    _ = Id(x => x.Id)
            .Column("id")
            .GeneratedBy.GuidComb()
            .CustomSqlType("uuid")
            .Not.Nullable();
 
-    _ = Map(static x => x.UnitPrice)
+    _ = Map(x => x.UnitPrice)
         .Column("unit_price")
         .Not.Nullable();
 
-    _ = Map(static x => x.Quantity)
+    _ = Map(x => x.Quantity)
         .Column("quantity")
         .Not.Nullable();
 
-    _ = Map(static x => x.TotalPrice)
+    _ = Map(x => x.TotalPrice)
         .Column("total_price")
         .Not.Nullable();
 
     // Relationships
-    _ = References(static x => x.Customer)
+    _ = References(x => x.Customer)
         .Column("customer_id")
         .Not.Nullable()
         .Cascade.SaveUpdate()
         .ForeignKey("sales_customer_fkey");
 
-    _ = References(static x => x.Employee)
+    _ = References(x => x.Employee)
         .Column("employee_id")
         .Not.Nullable()
         .Cascade.SaveUpdate()
         .ForeignKey("sales_employee_fkey");
 
-    _ = References(static x => x.Product)
+    _ = References(x => x.Product)
         .Column("product_id")
         .Not.Nullable()
         .Cascade.SaveUpdate()

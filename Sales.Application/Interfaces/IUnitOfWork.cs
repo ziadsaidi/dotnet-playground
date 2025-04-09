@@ -1,8 +1,3 @@
-
-using Sales.Application.Customers;
-using Sales.Application.Employees;
-using Sales.Application.Products;
-
 namespace Sales.Application.Interfaces
 {
   public interface IUnitOfWork
@@ -11,6 +6,8 @@ namespace Sales.Application.Interfaces
     IEmployeeRepository Employees { get; }
 
     IProductRepository Products { get; }
+
+    IUserRepository Users { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
   }
 }

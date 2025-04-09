@@ -14,6 +14,8 @@ namespace Sales.Persistence.NH.UnitOfWork
     private ICustomerRepository? _customerRepository;
     private IEmployeeRepository? _employeeRepository;
     private IProductRepository? _productRepository;
+
+    private IUserRepository? _userRepository;
     private bool _disposed;
 
     public UnitOfWork(ISession session)
@@ -27,6 +29,8 @@ namespace Sales.Persistence.NH.UnitOfWork
     public IEmployeeRepository Employees => _employeeRepository ??= new EmployeeRepository(_session);
 
     public IProductRepository Products => _productRepository ??= new ProductRepository(_session);
+
+    public IUserRepository Users => _userRepository ??= new UserRepository(_session);
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

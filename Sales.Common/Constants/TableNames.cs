@@ -6,4 +6,6 @@ public static class TableNames
   public const string Sales = "sales";
   public const string Employees = "employees";
   public const string Products = "products";
+
+  public const string Users = "users";
 }

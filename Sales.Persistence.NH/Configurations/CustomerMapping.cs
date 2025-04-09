@@ -10,17 +10,17 @@ public sealed class CustomerMapping : ClassMap<Customer>
   {
     Table(TableNames.Customers);
 
-    _ = Id(static x => x.Id)
+    _ = Id(x => x.Id)
         .Column("id")
         .GeneratedBy.GuidComb()
         .CustomSqlType("uuid")
         .Not.Nullable();
 
-    _ = Map(static x => x.Name)
+    _ = Map(x => x.Name)
         .Column("name")
         .Not.Nullable();
 
-    _ = HasMany(static x => x.Sales)
+    _ = HasMany(x => x.Sales)
         .Inverse()
         .Cascade.All()
         .KeyColumn("customer_id");

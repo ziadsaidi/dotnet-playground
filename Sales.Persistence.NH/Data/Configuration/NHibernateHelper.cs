@@ -24,6 +24,7 @@ namespace Sales.Persistence.NH.Data.Configuration
             _ = m.FluentMappings.AddFromAssemblyOf<EmployeeMapping>();
             _ = m.FluentMappings.AddFromAssemblyOf<ProductMapping>();
             _ = m.FluentMappings.AddFromAssemblyOf<SaleMapping>();
+            _ = m.FluentMappings.AddFromAssemblyOf<UserMapping>();
           })
           .BuildConfiguration();
 

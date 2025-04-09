@@ -1,6 +1,6 @@
 using System.Data;
 using Dapper;
-using Sales.Application.Customers;
+using Sales.Application.Interfaces;
 using Sales.Domain.Entities;
 
 namespace Sales.Persistence.Dapper.Repositories;

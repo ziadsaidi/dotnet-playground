@@ -3,8 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Sales.Application.Interfaces;
 using System.Data;
 using Npgsql;
-using Sales.Application.Customers;
-using Sales.Application.Employees;
 using Sales.Persistence.Dapper.UnitOfWork;
 using Sales.Persistence.Dapper.Repositories;
 
@@ -23,7 +21,8 @@ public static class DapperDependencyInjection
 
     services.AddScoped<ICustomerRepository, CustomerRepository>();
     services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-    services.AddScoped<Application.Products.IProductRepository, ProductRepository>();
+    services.AddScoped<IProductRepository, ProductRepository>();
+    services.AddScoped<IUserRepository, UserRepository>();
     services.AddScoped<IUnitOfWork, UnitOfWork>();
 
     return services;

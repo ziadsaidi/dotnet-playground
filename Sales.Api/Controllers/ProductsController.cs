@@ -4,8 +4,11 @@ using Sales.Application.Products.Commands.Create;
 using Sales.Application.Products.Queries.GetAll;
 using Sales.Application.Products.Queries.GetById;
 using Sales.Api.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 namespace Sales.Api.Controllers;
 
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/problem+json")]

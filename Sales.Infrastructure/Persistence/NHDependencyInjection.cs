@@ -3,9 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Sales.Application.Interfaces;
 using NHibernate;
 using Microsoft.Extensions.Hosting;
-using Sales.Application.Customers;
-using Sales.Application.Employees;
-using Sales.Application.Products;
 using Sales.Persistence.NH.UnitOfWork;
 using Sales.Persistence.NH.Repositories;
 using Sales.Persistence.NH.Data.Configuration;
@@ -48,9 +45,10 @@ public static class NHDependencyInjection
     services.AddScoped<ICustomerRepository, CustomerRepository>();
     services.AddScoped<IEmployeeRepository, EmployeeRepository>();
     services.AddScoped<IProductRepository, ProductRepository>();
+    services.AddScoped<IUserRepository, UserRepository>();
+
     services.AddScoped<IUnitOfWork, UnitOfWork>();
 
     return services;
   }
 }
-

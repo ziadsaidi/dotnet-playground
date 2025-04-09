@@ -1,6 +1,6 @@
 using NHibernate;
 using NHibernate.Linq;
-using Sales.Application.Employees;
+using Sales.Application.Interfaces;
 using Sales.Domain.Entities;
 
 namespace Sales.Persistence.NH.Repositories;

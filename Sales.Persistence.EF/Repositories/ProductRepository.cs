@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Sales.Application.Products;
+using Sales.Application.Interfaces;
 using Sales.Domain.Entities;
 using Sales.Persistence.EF.Data.Configuration;
 

@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using Sales.Application.Customers;
+using Sales.Application.Interfaces;
 using Sales.Domain.Entities;
 using Sales.Persistence.EF.Data.Configuration;
 
 namespace Sales.Persistence.EF.Repositories;
 
+using EF = Microsoft.EntityFrameworkCore.EF;
 public class CustomerRepository : ICustomerRepository
 {
   private readonly AppDbContext _context;
@@ -23,7 +24,7 @@ public class CustomerRepository : ICustomerRepository
   {
     return _context.Customers
         .AsNoTracking()
-        .AnyAsync(c => c.Name == name, cancellationToken);
+        .AnyAsync(c => EF.Functions.Like(c.Name, name), cancellationToken);
   }
 
   public Task AddAsync(Customer customer, CancellationToken cancellationToken)

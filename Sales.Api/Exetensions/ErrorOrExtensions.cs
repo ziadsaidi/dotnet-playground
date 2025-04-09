@@ -25,6 +25,7 @@ public static class ErrorOrExtensions
     return first.Type switch
     {
       ErrorType.Validation => new BadRequestObjectResult(errors),
+      ErrorType.Unauthorized => new UnauthorizedObjectResult(errors),
       ErrorType.Conflict => new ConflictObjectResult(errors),
       ErrorType.NotFound => new NotFoundObjectResult(errors),
       _ => new ObjectResult(new ProblemDetails

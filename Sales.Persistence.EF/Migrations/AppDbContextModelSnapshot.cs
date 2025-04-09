@@ -22,7 +22,7 @@ namespace Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Entities.Customer", b =>
+            modelBuilder.Entity("Sales.Domain.Entities.Customer", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -39,7 +39,7 @@ namespace Persistence.Migrations
                     b.ToTable("customers", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Employee", b =>
+            modelBuilder.Entity("Sales.Domain.Entities.Employee", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -56,7 +56,7 @@ namespace Persistence.Migrations
                     b.ToTable("employees", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Product", b =>
+            modelBuilder.Entity("Sales.Domain.Entities.Product", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -67,7 +67,7 @@ namespace Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
-                    b.Property<double?>("Price")
+                    b.Property<double>("Price")
                         .HasColumnType("double precision")
                         .HasColumnName("price");
 
@@ -77,19 +77,19 @@ namespace Persistence.Migrations
                     b.ToTable("products", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Sale", b =>
+            modelBuilder.Entity("Sales.Domain.Entities.Sale", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("creation_date");
+
                     b.Property<Guid?>("CustomerId")
                         .HasColumnType("uuid")
                         .HasColumnName("customer_id");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("date");
 
                     b.Property<Guid?>("EmployeeId")
                         .HasColumnType("uuid")
@@ -126,19 +126,56 @@ namespace Persistence.Migrations
                     b.ToTable("sales", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Sale", b =>
+            modelBuilder.Entity("Sales.Domain.Entities.User", b =>
                 {
-                    b.HasOne("Domain.Entities.Customer", "Customer")
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("password_hash");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("username");
+
+                    b.HasKey("Id")
+                        .HasName("pk_users");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Users_Email");
+
+                    b.HasIndex("Username")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Users_Username");
+
+                    b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("Sales.Domain.Entities.Sale", b =>
+                {
+                    b.HasOne("Sales.Domain.Entities.Customer", "Customer")
                         .WithMany("Sales")
                         .HasForeignKey("CustomerId")
                         .HasConstraintName("sales_customer_fkey");
 
-                    b.HasOne("Domain.Entities.Employee", "Employee")
+                    b.HasOne("Sales.Domain.Entities.Employee", "Employee")
                         .WithMany("Sales")
                         .HasForeignKey("EmployeeId")
                         .HasConstraintName("sales_employee_fkey");
 
-                    b.HasOne("Domain.Entities.Product", "Product")
+                    b.HasOne("Sales.Domain.Entities.Product", "Product")
                         .WithMany("Sales")
                         .HasForeignKey("ProductId")
                         .HasConstraintName("sales_product_fkey");
@@ -150,17 +187,17 @@ namespace Persistence.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Customer", b =>
+            modelBuilder.Entity("Sales.Domain.Entities.Customer", b =>
                 {
                     b.Navigation("Sales");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Employee", b =>
+            modelBuilder.Entity("Sales.Domain.Entities.Employee", b =>
                 {
                     b.Navigation("Sales");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Product", b =>
+            modelBuilder.Entity("Sales.Domain.Entities.Product", b =>
                 {
                     b.Navigation("Sales");
                 });

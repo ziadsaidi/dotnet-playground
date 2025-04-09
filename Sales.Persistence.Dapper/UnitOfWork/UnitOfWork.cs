@@ -1,8 +1,5 @@
 using System.Data;
-using Sales.Application.Customers;
-using Sales.Application.Employees;
 using Sales.Application.Interfaces;
-using Sales.Application.Products;
 using Sales.Persistence.Dapper.Repositories;
 
 namespace Sales.Persistence.Dapper.UnitOfWork;
@@ -17,6 +14,8 @@ public class UnitOfWork(IDbConnection dbConnection) : IUnitOfWork
   public IEmployeeRepository Employees { get; } = new EmployeeRepository(dbConnection);
 
   public IProductRepository Products { get; } = new ProductRepository(dbConnection);
+
+  public IUserRepository Users => new UserRepository(dbConnection);
 
   public void BeginTransaction()
   {
