@@ -8,4 +8,7 @@ public static class TableNames
   public const string Products = "products";
 
   public const string Users = "users";
+
+  public const string SaleLineItem = "saleline_items";
+  public const string InventoryTransaction = "inventory_transaction";
 }

@@ -1,11 +1,11 @@
 
 using ErrorOr;
+using Sales.Application.Abstractions.Mediator;
 using Sales.Application.Interfaces;
-using Sales.Application.Mediator;
 
 namespace Sales.Application.Users.Commands.Login;
 
-public class LoginUserCammandHandler(IAuthService authService, IUserRepository userRepository) : IRequestHandler<LoginUserCommand, string>
+public class LoginUserCommandHandler(IAuthService authService, IUserRepository userRepository) : IRequestHandler<LoginUserCommand, string>
 {
   private readonly IAuthService _authService = authService;
   private readonly IUserRepository _userRepository = userRepository;
@@ -24,6 +24,6 @@ public class LoginUserCammandHandler(IAuthService authService, IUserRepository u
       return Error.Unauthorized("Authentication failed");
     }
 
-    return _authService.GenerateToken(Guid.NewGuid(), request.Email);
+    return _authService.GenerateToken(user.Id, request.Email);
   }
 }

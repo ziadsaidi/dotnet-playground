@@ -1,8 +1,8 @@
 
 using ErrorOr;
 using FluentValidation;
+using Sales.Application.Abstractions.Mediator;
 using Sales.Application.Interfaces;
-using Sales.Application.Mediator;
 using Sales.Domain.Entities;
 using Sales.Domain.Errors;
 
@@ -30,7 +30,7 @@ public class RegisterUserCommandHandler(IUnitOfWork unitOfWork, IValidator<Regis
     // Hash password
     string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-    var newUser = User.Create(request.Username, request.Email, passwordHash);
+    var newUser = User.Create(request.Username, request.FullName, request.Email, request.Phone, passwordHash, request.Role);
 
     await _unitOfWork.Users.AddAsync(newUser, cancellationToken);
 

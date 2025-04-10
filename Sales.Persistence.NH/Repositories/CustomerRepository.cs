@@ -18,7 +18,7 @@ public class CustomerRepository(ISession session) : ICustomerRepository
   {
     string lowerCaseName = name.ToLowerInvariant();
     return _session.Query<Customer>()
-                   .AnyAsync(c => c.Name.ToLowerInvariant() == lowerCaseName, cancellationToken);
+                   .AnyAsync(c => c.User.FullName.ToLowerInvariant() == lowerCaseName, cancellationToken);
   }
 
   public async Task AddAsync(Customer customer, CancellationToken cancellationToken)
@@ -38,5 +38,10 @@ public class CustomerRepository(ISession session) : ICustomerRepository
   public Task DeleteAsync(Customer customer, CancellationToken cancellationToken)
   {
     return _session.DeleteAsync(customer, cancellationToken);
+  }
+
+  public Task<Customer?> GetByIdWithUserAsync(Guid id, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }

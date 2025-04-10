@@ -1,7 +1,7 @@
 using ErrorOr;
+using Sales.Application.Abstractions.Mediator;
 using Sales.Application.Common;
 using Sales.Application.Interfaces;
-using Sales.Application.Mediator;
 using Sales.Domain.Errors;
 
 namespace Sales.Application.Customers.Commands.Delete;

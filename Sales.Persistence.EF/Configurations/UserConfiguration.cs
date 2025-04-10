@@ -14,7 +14,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
     _ = builder.Property(b => b.Id)
             .IsRequired()
-            .HasColumnName("name")
+            .HasColumnName("id")
             .ValueGeneratedNever();
 
     _ = builder.Property(b => b.Email)
@@ -30,12 +30,18 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     _ = builder.Property(b => b.PasswordHash)
           .HasColumnName("password_hash");
 
+    _ = builder.Property(b => b.Role)
+                .HasColumnName("role")
+                .HasConversion<string>();
+
     _ = builder.HasIndex(b => b.Email)
             .HasDatabaseName("IX_Users_Email")
             .IsUnique();
     _ = builder.HasIndex(b => b.Username)
             .HasDatabaseName("IX_Users_Username")
             .IsUnique();
+
+
 
     builder.ToTable(TableNames.Users);
   }

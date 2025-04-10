@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Sales.Api.Extensions;
-using Sales.Application.Mediator;
+using Sales.Application.Abstractions.Mediator;
 using Sales.Application.Users.Commands.Login;
 using Sales.Application.Users.Commands.Register;
 

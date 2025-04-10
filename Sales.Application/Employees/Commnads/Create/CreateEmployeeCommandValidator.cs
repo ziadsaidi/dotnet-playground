@@ -6,9 +6,8 @@ public sealed class CreateEmployeeModelValidator : AbstractValidator<CreateEmplo
 {
   public CreateEmployeeModelValidator()
   {
-    _ = RuleFor(static x => x.Name)
+    _ = RuleFor(static x => x.Salary)
         .NotEmpty().WithMessage("Name is required")
-        .MaximumLength(100).WithMessage("Name cannot exceed 100 characters")
-        .MinimumLength(2).WithMessage("Name must be at least 2 characters");
+        .GreaterThan(0);
   }
 }

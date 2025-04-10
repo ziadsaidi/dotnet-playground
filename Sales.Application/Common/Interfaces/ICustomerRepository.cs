@@ -6,6 +6,8 @@ namespace Sales.Application.Interfaces
   {
     Task<Customer?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
+    Task<Customer?> GetByIdWithUserAsync(Guid id, CancellationToken cancellationToken);
+
     IAsyncEnumerable<Customer> GetCustomers();
 
     Task<bool> ExistsAsync(string name, CancellationToken cancellationToken);

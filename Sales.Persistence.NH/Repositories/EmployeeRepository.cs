@@ -16,7 +16,7 @@ public class EmployeeRepository(ISession session) : IEmployeeRepository
   public Task<bool> ExistsAsync(string name, CancellationToken cancellationToken)
   {
     string lowerCaseName = name.ToLowerInvariant();
-    return _session.Query<Employee>().AnyAsync(e => e.Name.ToLowerInvariant() == lowerCaseName, cancellationToken);
+    return _session.Query<Employee>().AnyAsync(e => e.User.FullName.ToLowerInvariant() == lowerCaseName, cancellationToken);
   }
 
   public Task<Employee?> GetByIdAsync(Guid id, CancellationToken cancellationToken)

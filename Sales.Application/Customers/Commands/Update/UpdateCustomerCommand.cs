@@ -1,6 +1,6 @@
+using Sales.Application.Abstractions.Mediator;
 using Sales.Application.Common;
-using Sales.Application.Mediator;
 
 namespace Sales.Application.Customers.Commands.Update;
 
-public record UpdateCustomerCommand(Guid Id, string Name) : IRequest<Unit>;
+public record UpdateCustomerCommand(Guid Id, string? Address) : IRequest<Unit>;

@@ -1,7 +1,7 @@
 using ErrorOr;
+using Sales.Application.Abstractions.Mediator;
 using Sales.Application.Employees.Common.Responses;
 using Sales.Application.Interfaces;
-using Sales.Application.Mediator;
 using Sales.Domain.Entities;
 using Sales.Domain.Errors;
 
@@ -21,7 +21,6 @@ public sealed class GetAllEmployeesQueryHandler(IUnitOfWork unitOfWork) : IReque
 
     return employees.ConvertAll(static customer => new EmployeeResponse(
         customer.Id,
-        customer.Name));
+        customer.User.FullName));
   }
 }
-

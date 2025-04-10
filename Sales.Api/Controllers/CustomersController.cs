@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
-using Sales.Application.Mediator;
 using Sales.Application.Customers.Commands.Create;
 using Sales.Application.Customers.Queries.GetAll;
 using Sales.Application.Customers.Queries.GetById;
 using Sales.Application.Customers.Commands.Update;
 using Sales.Api.Controllers.Models;
-using Sales.Api.Extensions;
 using Sales.Application.Customers.Commands.Delete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Sales.Application.Abstractions.Mediator;
+using Sales.Api.Extensions;
 
 namespace Sales.Api.Controllers;
 
@@ -34,7 +34,6 @@ public sealed class CustomersController(IAppMediator mediator) : ControllerBase
     );
   }
 
-
   [HttpPut("{id:guid}")]
   [ProducesResponseType(StatusCodes.Status204NoContent)]
   [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -42,13 +41,12 @@ public sealed class CustomersController(IAppMediator mediator) : ControllerBase
   [ProducesResponseType(StatusCodes.Status500InternalServerError)]
   public async Task<IActionResult> Update(Guid id, UpdateCustomerDto dto)
   {
-    var result = await _mediator.Send(new UpdateCustomerCommand(id, dto.Name));
-    return result.Match<IActionResult>(
+    var result = await _mediator.Send(new UpdateCustomerCommand(id, dto.Address));
+    return result.Match(
         _ => NoContent(),
         errors => errors.ToActionResult()
     );
   }
-
 
   [HttpGet]
   [ProducesResponseType(StatusCodes.Status200OK)]

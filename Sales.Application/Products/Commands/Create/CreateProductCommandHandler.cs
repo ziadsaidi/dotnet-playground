@@ -1,7 +1,7 @@
 using ErrorOr;
 using FluentValidation;
+using Sales.Application.Abstractions.Mediator;
 using Sales.Application.Interfaces;
-using Sales.Application.Mediator;
 using Sales.Application.Products.Common.Responses;
 using Sales.Domain.Entities;
 using Sales.Domain.Errors;

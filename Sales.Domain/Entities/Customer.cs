@@ -2,33 +2,26 @@ using Sales.Domain.Common;
 
 namespace Sales.Domain.Entities;
 
-public class Customer : IEntity
+public class Customer : IEntity, IAggregateRoot
 {
-  public Customer()
-  { }
-  private Customer(Guid id, string name)
-  {
-    Id = id;
-    Name = name;
-    Sales = [];
-  }
-
-  public virtual Guid Id { get; protected set; }
-  public virtual string Name { get; protected set; } = null!;
+  public virtual Guid Id { get; protected set; } = Guid.CreateVersion7();
+  public virtual string Address { get; protected set; } = null!;
+  public virtual Guid UserId { get; protected set; }
+  public virtual User User { get; protected set; } = null!;
   public virtual ICollection<Sale> Sales { get; protected init; } = [];
 
-  public static Customer Create(string name)
+  public static Customer Create(Guid userId, string address)
   {
-    return new Customer(Guid.CreateVersion7(), name);
+    return new Customer
+    {
+      Id = Guid.CreateVersion7(),
+      UserId = userId,
+      Address = address
+    };
   }
 
-  public static Customer Create(Guid id, string name)
+  public virtual void UpdateAddress(string newAddress)
   {
-    return new Customer(id, name);
-  }
-
-  public virtual void Update(string newName)
-  {
-    Name = newName;
+    Address = newAddress;
   }
 }

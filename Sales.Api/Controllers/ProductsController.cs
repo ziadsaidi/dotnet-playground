@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using Sales.Application.Mediator;
 using Sales.Application.Products.Commands.Create;
 using Sales.Application.Products.Queries.GetAll;
 using Sales.Application.Products.Queries.GetById;
-using Sales.Api.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Sales.Application.Abstractions.Mediator;
+using Sales.Api.Extensions;
 namespace Sales.Api.Controllers;
 
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

@@ -6,6 +6,7 @@ using Sales.Infrastructure.Security;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Sales.Infrastructure.Identity.Options;
 namespace Sales.Infrastructure;
 
 public enum DatabaseProvider
@@ -31,14 +32,16 @@ public static class PersistenceDependencyInjection
     };
   }
 
-  public static IServiceCollection AddInfrastructure(this IServiceCollection services, string jwtSecret)
+  public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
   {
-    // Register AuthService with proper dependency injection
-    services.AddScoped<IAuthService>(provider =>
-    {
-      var userRepository = provider.GetRequiredService<IUserRepository>();
-      return new AuthService(jwtSecret, userRepository);
-    });
+    _ = services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+    var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
+
+    _ = services.AddScoped<IAuthService>(provider =>
+ {
+   var userRepository = provider.GetRequiredService<IUserRepository>();
+   return new AuthService(jwtSettings!, userRepository);
+ });
 
     // Add authentication services
     _ = services.AddAuthentication(options =>
@@ -48,7 +51,7 @@ public static class PersistenceDependencyInjection
     })
     .AddJwtBearer(options =>
     {
-      var keyBytes = Encoding.UTF8.GetBytes(jwtSecret);
+      var keyBytes = Encoding.UTF8.GetBytes(jwtSettings.Secret);
       var signingKey = new SymmetricSecurityKey(keyBytes)
       {
         KeyId = null
@@ -57,12 +60,12 @@ public static class PersistenceDependencyInjection
       options.TokenValidationParameters = new TokenValidationParameters
       {
         ValidateIssuer = true,
-        ValidIssuer = "YourIssuer",
+        ValidIssuer = jwtSettings.Issuer,
         ValidateAudience = true,
-        ValidAudience = "YourAudience",
+        ValidAudience = jwtSettings.Audience,
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = signingKey,
-        ValidateLifetime = true, 
+        ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero
       };
       options.Events = new JwtBearerEvents

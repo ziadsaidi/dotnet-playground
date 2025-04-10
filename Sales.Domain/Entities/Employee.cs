@@ -1,14 +1,27 @@
-
 using Sales.Domain.Common;
 
-namespace Sales.Domain.Entities
+namespace Sales.Domain.Entities;
+
+public class Employee : IEntity, IAggregateRoot
 {
-  public class Employee : IEntity
+  public virtual Guid Id { get; set; } = Guid.CreateVersion7();
+  public virtual EmployeePosition Position { get; set; }
+  public virtual double Salary { get; set; }
+  public virtual Guid UserId { get; set; }
+  public virtual User User { get; set; } = null!;
+  public virtual ICollection<Sale> Sales { get; init; } = [];
+
+  public InventoryTransaction InventoryTransaction { get; init; } = null!;
+
+  public static Employee Create(Guid userId, EmployeePosition position, double salary)
   {
-    public virtual Guid Id { get; set; } = Guid.CreateVersion7();
-
-    public virtual required string Name { get; init; }
-
-    public virtual ICollection<Sale> Sales { get; init; } = [];
+    return new Employee
+    {
+      Id = Guid.CreateVersion7(),
+      UserId = userId,
+      Position = position,
+      Salary = salary
+    };
   }
 }
+

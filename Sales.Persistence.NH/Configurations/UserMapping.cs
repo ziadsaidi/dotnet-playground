@@ -1,5 +1,6 @@
 using FluentNHibernate.Mapping;
 using Sales.Common.Constants;
+using Sales.Domain.Common;
 using Sales.Domain.Entities;
 
 namespace Sales.Persistence.NH.Configurations;
@@ -32,5 +33,8 @@ public sealed class UserMapping : ClassMap<User>
       .Column("password_hash")
       .Not.Nullable()
       .CustomSqlType("text");
+
+    _ = Map(x => x.Role).CustomType<Role>()
+       .Not.Nullable();
   }
 }

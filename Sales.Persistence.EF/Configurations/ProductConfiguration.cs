@@ -23,6 +23,22 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
     _ = builder.Property(e => e.Price)
          .IsRequired()
          .HasColumnName("price");
+
+    _ = builder.Property(e => e.StockQuantity)
+          .HasColumnName("stock_quantity");
+
+    _ = builder.HasMany(p => p.InventoryTransactions)
+              .WithOne(p => p.Product)
+              .HasForeignKey(x => x.ProductId)
+              .OnDelete(DeleteBehavior.Cascade)
+               .HasConstraintName("fk_products_inventory_transactions");
+
+    _ = builder.HasMany(p => p.SaleLineItems)
+                .WithOne(p => p.Product)
+                .HasForeignKey(x => x.ProductId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_products_sales_items");
+
     _ = builder.ToTable(TableNames.Products);
   }
 }

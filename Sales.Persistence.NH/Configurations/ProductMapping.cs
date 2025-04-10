@@ -24,9 +24,5 @@ public sealed class ProductMapping : ClassMap<Product>
          .Column("price")
          .Nullable();
 
-    _ = HasMany(x => x.Sales)
-        .Inverse()
-        .Cascade.All()
-        .KeyColumn("product_id");
   }
 }

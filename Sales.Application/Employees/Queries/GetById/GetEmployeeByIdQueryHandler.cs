@@ -1,7 +1,7 @@
 using ErrorOr;
+using Sales.Application.Abstractions.Mediator;
 using Sales.Application.Employees.Common.Responses;
 using Sales.Application.Interfaces;
-using Sales.Application.Mediator;
 using Sales.Domain.Entities;
 using Sales.Domain.Errors;
 
@@ -17,6 +17,6 @@ public sealed class GetEmployeeByIdQueryHandler(IUnitOfWork unitOfWork) : IReque
 
     return customer is null
         ? DomainErrors.EmployeeErrors.NotFound
-        : new EmployeeResponse(customer.Id, customer.Name);
+        : new EmployeeResponse(customer.Id, customer.User.FullName);
   }
 }

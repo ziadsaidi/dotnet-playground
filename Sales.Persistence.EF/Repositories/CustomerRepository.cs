@@ -17,14 +17,15 @@ public class CustomerRepository : ICustomerRepository
 
   public Task<Customer?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
   {
-    return _context.Customers.FindAsync([id], cancellationToken).AsTask();
+    return _context.Customers
+      .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
   }
 
   public Task<bool> ExistsAsync(string name, CancellationToken cancellationToken)
   {
     return _context.Customers
         .AsNoTracking()
-        .AnyAsync(c => EF.Functions.Like(c.Name, name), cancellationToken);
+        .AnyAsync(c => EF.Functions.Like(c.User.FullName, name), cancellationToken);
   }
 
   public Task AddAsync(Customer customer, CancellationToken cancellationToken)
@@ -34,7 +35,10 @@ public class CustomerRepository : ICustomerRepository
 
   public IAsyncEnumerable<Customer> GetCustomers()
   {
-    return _context.Customers.AsNoTracking().AsAsyncEnumerable();
+    return _context.Customers
+        .Include(c => c.User)
+        .AsNoTracking()
+        .AsAsyncEnumerable();
   }
 
   public void Update(Customer customer)
@@ -46,5 +50,12 @@ public class CustomerRepository : ICustomerRepository
   {
     _context.Customers.Remove(customer);
     return Task.CompletedTask;
+  }
+
+  public Task<Customer?> GetByIdWithUserAsync(Guid id, CancellationToken cancellationToken)
+  {
+     return _context.Customers
+      .Include(c => c.User)
+      .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
   }
 }

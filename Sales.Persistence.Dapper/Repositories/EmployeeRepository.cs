@@ -1,6 +1,7 @@
 using System.Data;
 using Dapper;
 using Sales.Application.Interfaces;
+using Sales.Domain.Common;
 using Sales.Domain.Entities;
 namespace Sales.Persistence.Dapper.Repositories;
 
@@ -24,7 +25,8 @@ public class EmployeeRepository(IDbConnection dbConnection) : IEmployeeRepositor
       yield return new Employee
       {
         Id = reader.GetGuid(reader.GetOrdinal("id")),
-        Name = reader.GetString(reader.GetOrdinal("name"))
+        Position = Enum.Parse<EmployeePosition>(reader.GetString(reader.GetOrdinal("position"))),
+        Salary = reader.GetDouble(reader.GetOrdinal("salary"))
       };
     }
   }
@@ -41,5 +43,4 @@ public class EmployeeRepository(IDbConnection dbConnection) : IEmployeeRepositor
     const string sql = "INSERT INTO employees (id, name) VALUES (@Id, @Name)";
     await _dbConnection.ExecuteAsync(sql, employee);
   }
-
 }

@@ -23,8 +23,8 @@ public class CustomerRepository(IDbConnection dbConnection) : ICustomerRepositor
     while (reader.Read())
     {
       yield return Customer.Create(
-        id: reader.GetGuid(reader.GetOrdinal("id")),
-        name: reader.GetString(reader.GetOrdinal("name")));
+        userId: reader.GetGuid(reader.GetOrdinal("user_id")),
+        address: reader.GetString(reader.GetOrdinal("address")));
     }
   }
 
@@ -51,5 +51,10 @@ public class CustomerRepository(IDbConnection dbConnection) : ICustomerRepositor
   {
     const string sql = "DELETE FROM customers WHERE id = @Id";
     return _dbConnection.ExecuteAsync(sql, new { customer.Id });
+  }
+
+  public Task<Customer?> GetByIdWithUserAsync(Guid id, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }

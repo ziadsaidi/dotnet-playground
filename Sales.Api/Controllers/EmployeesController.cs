@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Sales.Application.Employees.Commnads.Create;
 using Sales.Application.Employees.Queries.GetAll;
 using Sales.Application.Employees.Queries.GetById;
-using Sales.Application.Mediator;
-using Sales.Api.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Sales.Application.Abstractions.Mediator;
+using Sales.Api.Extensions;
 
 namespace Sales.Api.Controllers;
 

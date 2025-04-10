@@ -1,6 +1,7 @@
+using Sales.Application.Abstractions.Mediator;
 using Sales.Application.Employees.Common.Responses;
-using Sales.Application.Mediator;
+using Sales.Domain.Common;
 
 namespace Sales.Application.Employees.Commnads.Create;
 
-public record CreateEmployeeCommand(string Name) : IRequest<EmployeeResponse?>;
+public record CreateEmployeeCommand(EmployeePosition Position, double Salary) : IRequest<EmployeeResponse?>;

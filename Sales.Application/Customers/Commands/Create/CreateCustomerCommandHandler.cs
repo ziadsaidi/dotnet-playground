@@ -1,40 +1,38 @@
-using FluentValidation;
 using ErrorOr;
 using Sales.Application.Customers.Common.Responses;
 using Sales.Domain.Entities;
 using Sales.Application.Interfaces;
-using Sales.Application.Mediator;
-using Sales.Domain.Errors;
+using Sales.Application.Common.Mapping;
+using Sales.Application.Abstractions.Mediator;
 
 namespace Sales.Application.Customers.Commands.Create;
 
 public sealed class CreateCustomerCommandHandler(
     IUnitOfWork unitOfWork,
-    IValidator<CreateCustomerCommand> validator) : IRequestHandler<CreateCustomerCommand, CustomerResponse?>
+    IMapper<Customer, CustomerResponse> customermapper,
+    IUserContext userContext) : IRequestHandler<CreateCustomerCommand, CustomerResponse?>
 {
   private readonly IUnitOfWork _unitOfWork = unitOfWork;
-  private readonly IValidator<CreateCustomerCommand> _validator = validator;
+  private readonly IUserContext _userContext = userContext;
+  private readonly IMapper<Customer, CustomerResponse> _customerMapper = customermapper;
 
   public async Task<ErrorOr<CustomerResponse?>> HandleAsync(CreateCustomerCommand model, CancellationToken cancellationToken = default)
   {
-    var validationResult = await _validator.ValidateAsync(model, cancellationToken);
+    ErrorOr<Guid> userIdResult = _userContext.GetAuthenticatedUserId();
 
-    if (!validationResult.IsValid)
+    if (userIdResult.IsError)
     {
-      return validationResult.Errors
-          .ConvertAll(static error => Error.Validation(error.PropertyName, error.ErrorMessage));
+      return userIdResult.Errors;
     }
 
-    if (await _unitOfWork.Customers.ExistsAsync(model.Name, cancellationToken))
-    {
-      return DomainErrors.CustomerErrors.DuplicateName;
-    }
-
-    var customer = Customer.Create(model.Name);
+    Customer customer = Customer.Create(userIdResult.Value, model.Address);
 
     await _unitOfWork.Customers.AddAsync(customer, cancellationToken);
     _ = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-    return new CustomerResponse(customer.Id, customer.Name);
+    Customer? customerWithUser = await _unitOfWork.Customers
+        .GetByIdWithUserAsync(customer.Id, cancellationToken);
+
+    return _customerMapper.Map(customerWithUser!);
   }
 }

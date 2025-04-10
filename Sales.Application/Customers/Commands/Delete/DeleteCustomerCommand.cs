@@ -1,6 +1,6 @@
 
+using Sales.Application.Abstractions.Mediator;
 using Sales.Application.Common;
-using Sales.Application.Mediator;
 
 namespace Sales.Application.Customers.Commands.Delete;
 

@@ -1,6 +1,6 @@
 using ErrorOr;
 
-namespace Sales.Application.Mediator;
+namespace Sales.Application.Abstractions.Mediator;
 
 public interface IRequestHandler<in TRequest, TResult>
     where TRequest : IRequest<TResult>

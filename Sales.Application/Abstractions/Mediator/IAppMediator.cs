@@ -1,7 +1,7 @@
 
 using ErrorOr;
 
-namespace Sales.Application.Mediator;
+namespace Sales.Application.Abstractions.Mediator;
 
 public interface IAppMediator
 {

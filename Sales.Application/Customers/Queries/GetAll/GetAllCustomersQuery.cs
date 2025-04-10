@@ -1,5 +1,5 @@
+using Sales.Application.Abstractions.Mediator;
 using Sales.Application.Customers.Common.Responses;
-using Sales.Application.Mediator;
 
 namespace Sales.Application.Customers.Queries.GetAll;
 

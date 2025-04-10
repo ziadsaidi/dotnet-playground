@@ -1,5 +1,6 @@
 
-using Sales.Application.Mediator;
+
+using Sales.Application.Abstractions.Mediator;
 
 namespace Sales.Application.Users.Commands.Login;
 

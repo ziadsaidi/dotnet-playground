@@ -1,15 +1,17 @@
 using ErrorOr;
+using Sales.Application.Abstractions.Mediator;
+using Sales.Application.Common.Mapping;
 using Sales.Application.Customers.Common.Responses;
 using Sales.Application.Interfaces;
-using Sales.Application.Mediator;
 using Sales.Domain.Entities;
 using Sales.Domain.Errors;
 
 namespace Sales.Application.Customers.Queries.GetById;
 
-public sealed class GetCustomerByIdQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetCustomerByIdQuery, CustomerResponse?>
+public sealed class GetCustomerByIdQueryHandler(IUnitOfWork unitOfWork, IMapper<Customer, CustomerResponse> mapper) : IRequestHandler<GetCustomerByIdQuery, CustomerResponse?>
 {
   private readonly IUnitOfWork _unitOfWork = unitOfWork;
+  private readonly IMapper<Customer, CustomerResponse> _mapper = mapper;
 
   public async Task<ErrorOr<CustomerResponse?>> HandleAsync(GetCustomerByIdQuery query, CancellationToken cancellationToken)
   {
@@ -17,6 +19,6 @@ public sealed class GetCustomerByIdQueryHandler(IUnitOfWork unitOfWork) : IReque
 
     return customer is null
         ? DomainErrors.CustomerErrors.NotFound
-        : new CustomerResponse(customer.Id, customer.Name);
+        : _mapper.Map(customer);
   }
 }

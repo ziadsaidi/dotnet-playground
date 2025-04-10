@@ -13,6 +13,5 @@ public static partial class DomainErrors
     public static Error NotFound => Error.NotFound(
         code: "User.NotFound",
         description: "The user with the specified identifier was not found");
-
   }
 }
