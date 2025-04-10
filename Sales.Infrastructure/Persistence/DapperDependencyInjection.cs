@@ -17,7 +17,7 @@ public static class DapperDependencyInjection
     string connectionString = configuration.GetConnectionString("DapperConnection")
         ?? throw new InvalidOperationException("Dapper Database connection string is not configured.");
 
-    services.AddScoped<IDbConnection>(provider => new NpgsqlConnection(connectionString));
+    services.AddScoped<IDbConnection>(_ => new NpgsqlConnection(connectionString));
 
     services.AddScoped<ICustomerRepository, CustomerRepository>();
     services.AddScoped<IEmployeeRepository, EmployeeRepository>();

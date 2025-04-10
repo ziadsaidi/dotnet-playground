@@ -34,7 +34,7 @@ public class AppMediator(IServiceProvider serviceProvider) : IAppMediator
   private static async Task<ErrorOr<TResponse>> ExecutePipeline<TResponse>(
       IRequest<TResponse> request,
       object handler,
-      IList<object> behaviors,
+      IList<object?>? behaviors,
       CancellationToken cancellationToken)
   {
     RequestHandler<TResponse> handlerDelegate = async () =>
@@ -57,7 +57,7 @@ public class AppMediator(IServiceProvider serviceProvider) : IAppMediator
     };
 
     // Chain the behaviors together
-    foreach (var behavior in behaviors.Reverse())
+    foreach (var behavior in behaviors?.Reverse())
     {
       var currentDelegate = handlerDelegate;
       var behaviorMethod = behavior.GetType().GetMethod("HandleAsync");
